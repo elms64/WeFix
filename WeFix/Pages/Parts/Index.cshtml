@@ -1,0 +1,78 @@
+@page
+@model WeFix.Pages.Parts.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Log a New Part</a>
+</p>
+
+<p><h4>Search and Filter</h4></p>
+<form>
+    <p>
+        <!-- Search for parts by their name -->
+        Part Name: <input type="text" asp-for="SearchString" />
+
+        <!-- Provide a drop down menu for selecting from the available car models -->
+        Select Model: <select asp-for="CarModelInput" asp-items="Model.CarModels">
+            <option value="">All</option>
+        </select>
+        <input type="submit" value="Filter" class="btn btn-primary" />
+    </p>
+</form>
+
+<!-- Provide a table structure to display parts and information -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Part[0].PartName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Part[0].ReleaseDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Part[0].CarModel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Part[0].Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Part[0].StockQuantity)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Part)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PartName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReleaseDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CarModel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StockQuantity)
+                </td>
+                <td>
+                    <!-- Links to edit, details and delete pages -->
+                    <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,54 @@
+@page
+@model WeFix.Pages.Appointments.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Appointment[0].CustomerID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Appointment[0].VehicleID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Appointment[0].Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Appointment[0].Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Appointment) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomerID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VehicleID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.AppointmentID">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.AppointmentID">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.AppointmentID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
