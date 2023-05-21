@@ -26,12 +26,12 @@ namespace WeFix.Pages.Appointments
 
         [BindProperty]
         public Appointment Appointment { get; set; } = default!;
-        
+
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Appointment == null || Appointment == null)
+            if (!ModelState.IsValid || _context.Appointment == null || Appointment == null)
             {
                 return Page();
             }

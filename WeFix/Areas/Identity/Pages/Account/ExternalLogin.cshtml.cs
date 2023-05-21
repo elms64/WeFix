@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using AuthSystem.Areas.Identity.Data;
+using WeFix.Areas.Identity.Data;
 
 namespace WeFix.Areas.Identity.Pages.Account
 {
