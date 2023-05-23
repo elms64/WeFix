@@ -14,9 +14,8 @@
     <None Remove="Areas\Identity\Data\" />
     <None Remove="Pages\Appointments\" />
     <None Remove="Pages\Customers\" />
-    <None Remove="Authorisation\" />
-    <None Remove="Pages\Employees\" />
     <None Remove="Models\" />
+    <None Remove="Pages\Employees\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="7.0.5" />
@@ -37,9 +36,8 @@
     <Folder Include="Areas\Identity\Data\" />
     <Folder Include="Pages\Appointments\" />
     <Folder Include="Pages\Customers\" />
-    <Folder Include="Authorisation\" />
-    <Folder Include="Pages\Employees\" />
     <Folder Include="Models\" />
+    <Folder Include="Pages\Employees\" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="Areas\Identity\Pages\_AuthLayout.cshtml" />

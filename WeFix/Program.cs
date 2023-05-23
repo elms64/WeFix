@@ -78,7 +78,7 @@ internal class Program
         {
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            var roles = new[] { "Admin", "Manager", "User" };
+            var roles = new[] { "SysAdmin", "Manager", "Technician", "Reception", "User" };
 
             foreach (var role in roles)
             {
@@ -89,7 +89,7 @@ internal class Program
 
         }
 
-        //Automatically create an Admin account
+        //Automatically create an Admin account with full access (password can be changed later)
         using (var scope = app.Services.CreateScope())
         {
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -101,16 +101,16 @@ internal class Program
             {
                 var user = new ApplicationUser
                 {
-                    FirstName = "Admin",
-                    LastName = "Account",
-                    UserName = email,
+                    FirstName = "System Admin",
+                    Surname = "Admin",
+                    UserName = "SysAdmin",
                     Email = email,
                     EmailConfirmed = true
                 };
 
                 await userManager.CreateAsync(user, password);
 
-                await userManager.AddToRoleAsync(user, "Admin");
+                await userManager.AddToRoleAsync(user, "SysAdmin");
             }
 
 

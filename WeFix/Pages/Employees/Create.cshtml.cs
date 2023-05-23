@@ -8,8 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using WeFix.Data;
 using WeFix.Models;
 
-
-namespace WeFix.Pages.Parts
+namespace WeFix.Pages.Employees
 {
     public class CreateModel : PageModel
     {
@@ -26,18 +25,18 @@ namespace WeFix.Pages.Parts
         }
 
         [BindProperty]
-        public Part Part { get; set; } = default!;
+        public Employee Employee { get; set; } = default!;
 
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || _context.Part == null || Part == null)
+            if (!ModelState.IsValid || _context.Employee == null || Employee == null)
             {
                 return Page();
             }
 
-            _context.Part.Add(Part);
+            _context.Employee.Add(Employee);
             await _context.SaveChangesAsync();
 
 

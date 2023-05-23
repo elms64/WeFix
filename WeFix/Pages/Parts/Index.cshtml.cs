@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 
 namespace WeFix.Pages.Parts
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly WeFix.Data.ApplicationDbContext _context;

@@ -23,15 +23,39 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
                         </li>
+
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Parts/Index">Parts Library</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Parts/Index">Car Parts</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Customers/Index">Customer Records</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Appointments/Index">Service Appointments</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Appointments/Index">Appointments</a>
-                        </li>
+                        @if (User.IsInRole("SysAdmin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/RoleManager">Role Manager</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Appointments/Index">Contact Us</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("SysAdmin") || User.IsInRole("Manager"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Employees/Index">Employee Manager</a>
+                            </li>
+                        }
+                        else { }
+                        @if (User.IsInRole("SysAdmin") || User.IsInRole("Manager") || User.IsInRole("Reception"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Customers/Index">Customer Records</a>
+                            </li>
+                        }
+                        else { }
 
                     </ul>
                     <partial name="_LoginPartial" />
