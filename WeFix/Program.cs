@@ -24,7 +24,9 @@ internal class Program
         builder.Services.AddDefaultIdentity<ApplicationUser>
             (options => options.SignIn.RequireConfirmedAccount = false)
             .AddRoles<IdentityRole>()
+            .AddRoleManager<RoleManager<IdentityRole>>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
+
 
 
         builder.Services.AddRazorPages();

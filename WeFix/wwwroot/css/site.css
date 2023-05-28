@@ -1,10 +1,10 @@
 ﻿html {
-    font-size: 14px;
+    font-size: 12px;
 }
 
 @media (min-width: 768px) {
     html {
-        font-size: 16px;
+        font-size: 14px;
     }
 }
 
@@ -19,7 +19,8 @@ html {
 
 body {
     margin-bottom: 60px;
-    font-family: Comfortaa, sans-serif;
+    font-family: Comfortaa;
+    padding-bottom: 120px;
 }
 
 /*tab navigation*/
@@ -44,4 +45,11 @@ body {
 
 .login-logout-card .card-body {
     padding: 10px 20px;
+}
+
+.footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
 }

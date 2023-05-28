@@ -1,6 +1,5 @@
 @page
 @model WeFix.Pages.Parts.IndexModel
-
 @{
     ViewData["Title"] = "Index";
 }
@@ -15,10 +14,10 @@
 <form>
     <p>
         <!-- Search for parts by their name -->
-        Part Name: <input type="text" asp-for="SearchString" />
+        Name: <input type="text" asp-for="SearchString" />
 
         <!-- Provide a drop down menu for selecting from the available car models -->
-        Select Model: <select asp-for="CarModelInput" asp-items="Model.CarModels">
+        Model: <select asp-for="CarModelInput" asp-items="Model.CarModels">
             <option value="">All</option>
         </select>
         <input type="submit" value="Filter" class="btn btn-primary" />

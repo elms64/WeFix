@@ -13,7 +13,6 @@
     <None Remove="Pages\Parts\" />
     <None Remove="Areas\Identity\Data\" />
     <None Remove="Pages\Appointments\" />
-    <None Remove="Pages\Customers\" />
     <None Remove="Models\" />
     <None Remove="Pages\Employees\" />
   </ItemGroup>
@@ -35,7 +34,6 @@
     <Folder Include="Pages\Parts\" />
     <Folder Include="Areas\Identity\Data\" />
     <Folder Include="Pages\Appointments\" />
-    <Folder Include="Pages\Customers\" />
     <Folder Include="Models\" />
     <Folder Include="Pages\Employees\" />
   </ItemGroup>

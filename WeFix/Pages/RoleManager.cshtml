@@ -1,0 +1,36 @@
+﻿@page
+@model WeFix.Pages.RoleManagerModel
+@{
+    ViewData["Title"] = "Role Manager";
+}
+
+<h1>Role Manager</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>User Name</th>
+            <th>Email</th>
+            <th>First Name</th>
+            <th>Surname</th>
+            <th>Roles</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var userRole in Model.UserRoles)
+        {
+            <tr>
+                <td>@userRole.UserName</td>
+                <td>@userRole.Email</td>
+                <td>@userRole.FirstName</td>
+                <td>@userRole.Surname</td>
+                <td>@string.Join(", ", userRole.Roles)</td>
+                <td>
+                    <a class="btn btn-primary" asp-page-handler="AssignRoles" asp-route-userId="@(userRole.UserName)">Assign Roles</a>
+                    <a class="btn btn-primary" asp-page-handler="RemoveRoles" asp-route-userId="@(userRole.UserName)">Remove Roles</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

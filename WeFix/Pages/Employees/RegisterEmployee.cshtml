@@ -1,0 +1,57 @@
+﻿@page
+@model WeFix.Pages.Employees.RegisterEmployeeModel
+@{
+    ViewData["Title"] = "Create User";
+}
+
+<h1>Create User</h1>
+
+
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="Input.Email"></label>
+        <input asp-for="Input.Email" class="form-control" />
+        <span asp-validation-for="Input.Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Input.Password"></label>
+        <input asp-for="Input.Password" class="form-control" />
+        <span asp-validation-for="Input.Password" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Input.FirstName"></label>
+        <input asp-for="Input.FirstName" class="form-control" />
+        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Input.Surname"></label>
+        <input asp-for="Input.Surname" class="form-control" />
+        <span asp-validation-for="Input.Surname" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Input.ProfilePicture"></label>
+        <input asp-for="Input.ProfilePicture" type="file" class="form-control-file" />
+        <span asp-validation-for="Input.ProfilePicture" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Select Roles:</label><br />
+        <input type="checkbox" id="userRole" name="Roles" value="User" />
+        <label for="userRole">User</label><br />
+        <input type="checkbox" id="receptionRole" name="Roles" value="Reception" />
+        <label for="receptionRole">Reception</label><br />
+        <input type="checkbox" id="technicianRole" name="Roles" value="Technician" />
+        <label for="technicianRole">Technician</label><br />
+        <input type="checkbox" id="managerRole" name="Roles" value="Manager" />
+        <label for="managerRole">Manager</label><br />
+        <input type="checkbox" id="sysAdminRole" name="Roles" value="SysAdmin" />
+        <label for="sysAdminRole">SysAdmin</label><br />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
