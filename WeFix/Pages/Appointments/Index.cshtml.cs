@@ -1,34 +1,47 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
+using WeFix.Authorization;
 using WeFix.Data;
 using WeFix.Models;
+using WeFix.Areas.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace WeFix.Pages.Appointments
 {
-    [Authorize(Roles = "SysAdmin, Manager, Reception, Technician, User")]
-    public class IndexModel : PageModel
-    {
-        private readonly WeFix.Data.ApplicationDbContext _context;
 
-        public IndexModel(WeFix.Data.ApplicationDbContext context)
+    public class IndexModel : DI_BasePageModel
+    {
+        public IndexModel(
+            ApplicationDbContext context,
+            IAuthorizationService authorizationService,
+            UserManager<ApplicationUser> userManager)
+            : base(context, authorizationService, userManager)
         {
-            _context = context;
         }
 
-        public IList<Appointment> Appointment { get; set; } = default!;
+        public IList<Appointment> Appointment { get; set; }
 
         public async Task OnGetAsync()
         {
-            if (_context.Appointment != null)
+            var appointments = from c in Context.Appointment
+                               select c;
+
+            var isAuthorized = User.IsInRole(Constants.AppointmentManagersRole) ||
+                               User.IsInRole(Constants.AppointmentAdministratorsRole);
+
+            var currentUserId = UserManager.GetUserId(User);
+
+            // Only approved contacts are shown UNLESS you're authorized to see them
+            // or you are the owner.
+            if (!isAuthorized)
             {
-                Appointment = await _context.Appointment.ToListAsync();
+                appointments = appointments.Where(c => c.Status == AppointmentStatus.Approved
+                                            || c.OwnerID == currentUserId);
             }
+
+            Appointment = await appointments.ToListAsync();
         }
     }
+
 }

@@ -1,22 +1,23 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using WeFix.Authorization;
 using WeFix.Data;
 using WeFix.Models;
+using WeFix.Areas.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WeFix.Pages.Appointments
 {
-    public class CreateModel : PageModel
-    {
-        private readonly WeFix.Data.ApplicationDbContext _context;
 
-        public CreateModel(WeFix.Data.ApplicationDbContext context)
+
+    public class CreateModel : DI_BasePageModel
+    {
+        public CreateModel(
+            ApplicationDbContext context,
+            IAuthorizationService authorizationService,
+            UserManager<ApplicationUser> userManager)
+            : base(context, authorizationService, userManager)
         {
-            _context = context;
         }
 
         public IActionResult OnGet()
@@ -25,19 +26,27 @@ namespace WeFix.Pages.Appointments
         }
 
         [BindProperty]
-        public Appointment Appointment { get; set; } = default!;
+        public Appointment Appointment { get; set; }
 
-
-        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid || _context.Appointment == null || Appointment == null)
+            if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            _context.Appointment.Add(Appointment);
-            await _context.SaveChangesAsync();
+            Appointment.OwnerID = UserManager.GetUserId(User);
+
+            var isAuthorized = await AuthorizationService.AuthorizeAsync(
+                                                        User, Appointment,
+                                                        AppointmentOperations.Create);
+            if (!isAuthorized.Succeeded)
+            {
+                return Forbid();
+            }
+
+            Context.Appointment.Add(Appointment);
+            await Context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
         }

@@ -60,5 +60,23 @@ namespace WeFix.Pages
 
             return RedirectToPage("RoleManager");
         }
+
+        public async Task<IActionResult> OnPostAddRolesAsync(string userId)
+        {
+            var user = await _userManager.FindByNameAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var defaultrole = _roleManager.FindByNameAsync("User").Result;
+
+            if (defaultrole != null)
+            {
+                IdentityResult roleresult = await _userManager.AddToRoleAsync(user, defaultrole.Name);
+            }
+
+            return RedirectToPage("RoleManager");
+        }
     }
 }

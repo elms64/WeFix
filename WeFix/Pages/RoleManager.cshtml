@@ -4,6 +4,45 @@
     ViewData["Title"] = "Role Manager";
 }
 
+@section Scripts {
+    <script>// Show confirmation modal and perform the action
+        function showConfirmationModal(text, action) {
+            $('#confirmText').text(text);
+            $('#confirmButton').off('click').on('click', function () {
+                action();
+                $('#confirmModal').modal('hide');
+            });
+            $('#confirmModal').modal('show');
+        }
+
+        // Handle the form submission with the modal confirmation
+        $(document).ready(function () {
+            $('form').on('submit', function (e) {
+                e.preventDefault(); // Prevent the default form submission
+
+                var form = $(this); // Store the form element in a variable
+                var button = form.find('button[type="submit"]');
+                var actionName = button.attr('data-action-name');
+                var confirmText = '';
+
+                // Set the confirmText based on the button clicked
+                if (actionName === 'AddRoles') {
+                    confirmText = 'Are you sure you want to add roles?';
+                } else if (actionName === 'RemoveRoles') {
+                    confirmText = 'Are you sure you want to remove roles?';
+                }
+
+                // Show the confirmation modal and perform the action
+                showConfirmationModal(confirmText, function () {
+                    form.off('submit').unbind('submit');
+                    form.get(0).submit(); // Submit the form after confirmation
+                });
+            });
+        });</script>
+
+
+}
+
 <h1>Role Manager</h1>
 
 <table class="table table-striped">
@@ -13,8 +52,9 @@
             <th>Email</th>
             <th>First Name</th>
             <th>Surname</th>
-            <th>Roles</th>
-            <th>Action</th>
+            <th>Authorised Roles</th>
+            <th>Add New Role</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -26,14 +66,72 @@
                 <td>@userRole.FirstName</td>
                 <td>@userRole.Surname</td>
                 <td>@string.Join(", ", userRole.Roles)</td>
+                <td style="text-align:center">
+                    <div class="form-check" style="text-align:left">
+                        <input class="form-check-input" type="radio" name="userRoles" id="userRole1" value="User" checked>
+                        <label class="form-check-label" for="userRoles">
+                            User
+                        </label>
+                    </div>
+                    <div class="form-check" style="text-align:left">
+                        <input class="form-check-input" type="radio" name="userRoles" id="userRole2" value="Reception" checked>
+                        <label class="form-check-label" for="userRoles">
+                            Reception
+                        </label>
+                    </div>
+                    <div class="form-check" style="text-align:left">
+                        <input class="form-check-input" type="radio" name="userRoles" id="userRole3" value="Technician" checked>
+                        <label class="form-check-label" for="userRoles">
+                            Technician
+                        </label>
+                    </div>
+                    <div class="form-check" style="text-align:left">
+                        <input class="form-check-input" type="radio" name="userRoles" id="userRole4" value="Manager" checked>
+                        <label class="form-check-label" for="userRoles">
+                            Manager
+                        </label>
+                    </div>
+                    <div class="form-check" style="text-align:left">
+                        <input class="form-check-input" type="radio" name="userRoles" id="userRole5" value="SysAdmin" checked>
+                        <label class="form-check-label" for="userRoles">
+                            SysAdmin
+                        </label>
+                    </div>
+                    <hr>
+                    <form method="post" asp-page-handler="AddRoles">
+                        <input type="hidden" name="userId" value="@userRole.UserName" />
+                        <button type="submit" class="btn btn-secondary btn-sm" data-action-name="AddRoles" style="padding-top:1px;padding-bottom:1px;">&nbsp&nbsp&nbsp&nbsp&nbsp Add Role &nbsp&nbsp&nbsp&nbsp&nbsp</button>
+                    </form><br />
+                </td>
                 <td>
-                    <a class="btn btn-primary" asp-page-handler="AssignRoles" asp-route-userId="@(userRole.UserName)">Assign Roles</a>
+                    <br /><br /><br />
                     <form method="post" asp-page-handler="RemoveRoles">
                         <input type="hidden" name="userId" value="@userRole.UserName" />
-                        <button type="submit" class="btn btn-primary">Remove Roles</button>
-                    </form>
+                        <button type="submit" class="btn btn-secondary" data-action-name="RemoveRoles">Remove All Roles</button>
+                    </form><br />
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<!-- Add the Bootstrap modal HTML -->
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Confirmation</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmText"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="confirmButton">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -14,14 +14,19 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Appointment.CustomerID" class="control-label"></label>
-                <input asp-for="Appointment.CustomerID" class="form-control" />
-                <span asp-validation-for="Appointment.CustomerID" class="text-danger"></span>
+                <label asp-for="Appointment.OwnerID" class="control-label"></label>
+                <input asp-for="Appointment.OwnerID" class="form-control" />
+                <span asp-validation-for="Appointment.OwnerID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Appointment.VehicleID" class="control-label"></label>
                 <input asp-for="Appointment.VehicleID" class="form-control" />
                 <span asp-validation-for="Appointment.VehicleID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Appointment.VehicleReg" class="control-label"></label>
+                <input asp-for="Appointment.VehicleReg" class="form-control" />
+                <span asp-validation-for="Appointment.VehicleReg" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Appointment.Date" class="control-label"></label>
@@ -32,6 +37,11 @@
                 <label asp-for="Appointment.Description" class="control-label"></label>
                 <input asp-for="Appointment.Description" class="form-control" />
                 <span asp-validation-for="Appointment.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Appointment.Status" class="control-label"></label>
+                <select asp-for="Appointment.Status" class="form-control"></select>
+                <span asp-validation-for="Appointment.Status" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

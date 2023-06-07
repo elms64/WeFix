@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using WeFix.Data;
 using WeFix.Models;
 using WeFix.Areas.Identity.Data;
+using Microsoft.VisualStudio.Web.CodeGeneration.Utils;
+using WeFix.Authorization;
 
 internal class Program
 {
@@ -40,7 +42,16 @@ internal class Program
             config.Filters.Add(new AuthorizeFilter(policy));
         });
 
+        builder.Services.AddScoped<IAuthorizationHandler,
+                      ContactIsOwnerAuthorizationHandler>();
+
+        builder.Services.AddSingleton<IAuthorizationHandler,
+                              ContactAdministratorsAuthorizationHandler>();
+
+        builder.Services.AddSingleton<IAuthorizationHandler,
+                              ContactManagerAuthorizationHandler>();
         builder.Services.Configure<IdentityOptions>(options =>
+
         {
             // Password settings.
             options.Password.RequireDigit = true;
@@ -72,6 +83,8 @@ internal class Program
             options.SlidingExpiration = true;
         });
 
+
+
         var app = builder.Build();
 
 
@@ -79,15 +92,24 @@ internal class Program
         using (var scope = app.Services.CreateScope())
         {
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
             var roles = new[] { "SysAdmin", "Manager", "Technician", "Reception", "User" };
-
             foreach (var role in roles)
             {
                 if (!await roleManager.RoleExistsAsync(role))
                     await roleManager.CreateAsync(new IdentityRole(role));
             }
 
+            var services = scope.ServiceProvider;
+            var context = services.GetRequiredService<ApplicationDbContext>();
+            context.Database.Migrate();
+
+            // requires using Microsoft.Extensions.Configuration;
+            // Set password with the Secret Manager tool.
+            // dotnet user-secrets set SeedUserPW <pw>
+
+            var testUserPw = builder.Configuration.GetValue<string>("SeedUserPW");
+
+            await SeedData.Initialize(services, testUserPw);
 
         }
 
@@ -119,12 +141,13 @@ internal class Program
         }
 
         //Seed some parts data into the database from the 'SeedData' class
-        using (var scope = app.Services.CreateScope())
-        {
-            var services = scope.ServiceProvider;
+        /// using (var scope = app.Services.CreateScope())
+        // {
+        //     var services = scope.ServiceProvider;
 
-            SeedData.Initialize(services);
-        }
+        //     SeedData.Initialize(services);
+        //
+        //   }
 
 
         // Configure the HTTP request pipeline.

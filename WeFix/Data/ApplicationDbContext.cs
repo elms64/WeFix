@@ -53,7 +53,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<WeFix.Models.Customer> Customer { get; set; } = default!;
 
-    public DbSet<WeFix.Models.Employee> Employee { get; set; } = default!;
+
 
 
 }

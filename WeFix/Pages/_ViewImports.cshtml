@@ -1,6 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using WeFix
 @using WeFix.Data
+@using WeFix.Authorization;
+@using Microsoft.AspNetCore.Authorization
+@using WeFix.Models
+@inject IAuthorizationService AuthorizationService
 @namespace WeFix.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 

@@ -14,10 +14,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Appointment[0].CustomerID)
+                @Html.DisplayNameFor(model => model.Appointment[0].OwnerID)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Appointment[0].VehicleID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Appointment[0].VehicleReg)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Appointment[0].Date)
@@ -25,30 +28,57 @@
             <th>
                 @Html.DisplayNameFor(model => model.Appointment[0].Description)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Appointment[0].Status)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Appointment) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CustomerID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VehicleID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.AppointmentID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.AppointmentID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.AppointmentID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Appointment)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OwnerID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VehicleID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VehicleReg)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @if ((await AuthorizationService.AuthorizeAsync(
+                    User, item,
+                    AppointmentOperations.Update)).Succeeded)
+                    {
+                        <a asp-page="./Edit" asp-route-id="@item.AppointmentID">Edit</a>
+                        <text> | </text>
+                    }
+
+                    <a asp-page="./Details" asp-route-id="@item.AppointmentID">Details</a>
+
+                    @if ((await AuthorizationService.AuthorizeAsync(
+                    User, item,
+                    AppointmentOperations.Delete)).Succeeded)
+                    {
+                        <text> | </text>
+                        <a asp-page="./Delete" asp-route-id="@item.AppointmentID">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

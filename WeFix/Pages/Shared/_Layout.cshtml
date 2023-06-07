@@ -43,13 +43,7 @@
                                 <a class="nav-link text-light" asp-area="" asp-page="/Appointments/Index">Contact</a>
                             </li>
                         }
-                        @if (User.IsInRole("SysAdmin") || User.IsInRole("Manager"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-page="/Employees/EmployeeIndex">Employees</a>
-                            </li>
-                        }
-                        else { }
+
                         @if (User.IsInRole("SysAdmin") || User.IsInRole("Manager") || User.IsInRole("Reception"))
                         {
                             <li class="nav-item">

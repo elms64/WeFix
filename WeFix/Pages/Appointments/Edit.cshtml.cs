@@ -2,76 +2,102 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WeFix.Data;
 using WeFix.Models;
+using WeFix.Authorization;
+using WeFix.Areas.Identity.Data;
 
 namespace WeFix.Pages.Appointments
 {
-    public class EditModel : PageModel
+    public class EditModel : DI_BasePageModel
     {
-        private readonly WeFix.Data.ApplicationDbContext _context;
-
-        public EditModel(WeFix.Data.ApplicationDbContext context)
+        public EditModel(
+            ApplicationDbContext context,
+            IAuthorizationService authorizationService,
+            UserManager<ApplicationUser> userManager)
+            : base(context, authorizationService, userManager)
         {
-            _context = context;
         }
 
         [BindProperty]
-        public Appointment Appointment { get; set; } = default!;
+        public Appointment Appointment { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (id == null || _context.Appointment == null)
-            {
-                return NotFound();
-            }
-
-            var appointment =  await _context.Appointment.FirstOrDefaultAsync(m => m.AppointmentID == id);
+            Appointment? appointment = await Context.Appointment.FirstOrDefaultAsync(
+                                                             m => m.AppointmentID == id);
             if (appointment == null)
             {
                 return NotFound();
             }
+
             Appointment = appointment;
+
+            var isAuthorized = await AuthorizationService.AuthorizeAsync(
+                                                      User, Appointment,
+                                                      AppointmentOperations.Update);
+            if (!isAuthorized.Succeeded)
+            {
+                return Forbid();
+            }
+
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(int id)
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            _context.Attach(Appointment).State = EntityState.Modified;
+            // Fetch Contact from DB to get OwnerID.
+            var appointment = await Context
+                .Appointment.AsNoTracking()
+                .FirstOrDefaultAsync(m => m.AppointmentID == id);
 
-            try
+            if (appointment == null)
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
+
+            var isAuthorized = await AuthorizationService.AuthorizeAsync(
+                                                     User, appointment,
+                                                     AppointmentOperations.Update);
+            if (!isAuthorized.Succeeded)
             {
-                if (!AppointmentExists(Appointment.AppointmentID))
+                return Forbid();
+            }
+
+            Appointment.OwnerID = appointment.OwnerID;
+
+            Context.Attach(Appointment).State = EntityState.Modified;
+
+            if (Appointment.Status == AppointmentStatus.Approved)
+            {
+                // If the contact is updated after approval, 
+                // and the user cannot approve,
+                // set the status back to submitted so the update can be
+                // checked and approved.
+                var canApprove = await AuthorizationService.AuthorizeAsync(User,
+                                        Appointment,
+                                        AppointmentOperations.Approve);
+
+                if (!canApprove.Succeeded)
                 {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
+                    Appointment.Status = AppointmentStatus.Submitted;
                 }
             }
+
+            await Context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
-        }
-
-        private bool AppointmentExists(int id)
-        {
-          return (_context.Appointment?.Any(e => e.AppointmentID == id)).GetValueOrDefault();
         }
     }
 }
