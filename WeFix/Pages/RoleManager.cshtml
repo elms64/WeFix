@@ -28,7 +28,10 @@
                 <td>@string.Join(", ", userRole.Roles)</td>
                 <td>
                     <a class="btn btn-primary" asp-page-handler="AssignRoles" asp-route-userId="@(userRole.UserName)">Assign Roles</a>
-                    <a class="btn btn-primary" asp-page-handler="RemoveRoles" asp-route-userId="@(userRole.UserName)">Remove Roles</a>
+                    <form method="post" asp-page-handler="RemoveRoles">
+                        <input type="hidden" name="userId" value="@userRole.UserName" />
+                        <button type="submit" class="btn btn-primary">Remove Roles</button>
+                    </form>
                 </td>
             </tr>
         }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WeFix.Areas.Identity.Data;
+using WeFix.Models;
 
 namespace WeFix.Pages
 {
@@ -21,7 +22,6 @@ namespace WeFix.Pages
         {
             _userManager = userManager;
             _roleManager = roleManager;
-
             UserRoles = new List<UserRoleViewModel>();
         }
 
@@ -37,7 +37,7 @@ namespace WeFix.Pages
             }).ToList();
         }
 
-        public async Task<IActionResult> OnPostAssignRoles(string userId, string[] selectedRoles)
+        public async Task<IActionResult> OnPostRemoveRolesAsync(string userId)
         {
             var user = await _userManager.FindByNameAsync(userId);
             if (user == null)
@@ -45,47 +45,20 @@ namespace WeFix.Pages
                 return NotFound();
             }
 
-            await _userManager.AddToRolesAsync(user, selectedRoles);
-            return RedirectToPage();
-        }
+            var roles = await _userManager.GetRolesAsync(user);
+            var deleteList = roles.ToList();
 
-        [HttpPost]
-        public async Task<IActionResult> OnPostRemoveRoles(string userId)
-        {
-            var user = await _userManager.FindByNameAsync(userId);
-            if (user == null)
+            foreach (var roleName in deleteList)
             {
-                return NotFound();
+                var result = await _userManager.RemoveFromRoleAsync(user, roleName);
+                if (!result.Succeeded)
+                {
+                    // Handle the error, e.g., log it or display an error message
+                    return BadRequest();
+                }
             }
 
-            var userRoles = await _userManager.GetRolesAsync(user);
-            await _userManager.RemoveFromRolesAsync(user, userRoles);
-
-            // Assign the "User" role to the user
-            await _userManager.AddToRoleAsync(user, "User");
-
-            // Save the changes to the user
-            var result = await _userManager.UpdateAsync(user);
-            if (!result.Succeeded)
-            {
-                ModelState.AddModelError("", "Failed to update user roles.");
-                return Page();
-            }
-
-            // Redirect to the page
-            return RedirectToPage();
-        }
-
-
-
-
-        public class UserRoleViewModel
-        {
-            public string UserName { get; set; }
-            public string Email { get; set; }
-            public string FirstName { get; set; }
-            public string Surname { get; set; }
-            public List<string> Roles { get; set; }
+            return RedirectToPage("RoleManager");
         }
     }
 }
