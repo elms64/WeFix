@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WeFix.Pages.Appointments
 {
-
+    [Authorize]
     public class IndexModel : DI_BasePageModel
     {
         public IndexModel(
@@ -21,6 +21,9 @@ namespace WeFix.Pages.Appointments
         }
 
         public IList<Appointment> Appointment { get; set; }
+
+        // Property to store User's First Name and Last Name
+        public Dictionary<string, string> UserNames { get; set; }
 
         public async Task OnGetAsync()
         {
@@ -41,7 +44,18 @@ namespace WeFix.Pages.Appointments
             }
 
             Appointment = await appointments.ToListAsync();
+
+            // Fetch First Name and Last Name for each User
+            UserNames = new Dictionary<string, string>();
+            foreach (var appointment in Appointment)
+            {
+                var owner = await UserManager.FindByIdAsync(appointment.OwnerID);
+                var firstName = owner?.FirstName;
+                var surname = owner?.Surname;
+                UserNames[appointment.OwnerID] = $"{firstName} {surname}";
+            }
         }
     }
+
 
 }

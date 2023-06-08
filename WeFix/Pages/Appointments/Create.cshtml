@@ -13,47 +13,68 @@
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
-                <label asp-for="Appointment.OwnerID" class="control-label"></label>
-                <input asp-for="Appointment.OwnerID" class="form-control" />
-                <span asp-validation-for="Appointment.OwnerID" class="text-danger"></span>
+                <label asp-for="Appointment.Email" class="control-label">Customer Email</label>
+                <input asp-for="Appointment.Email" class="form-control" />
+                <span asp-validation-for="Appointment.Email" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Appointment.VehicleID" class="control-label"></label>
-                <input asp-for="Appointment.VehicleID" class="form-control" />
-                <span asp-validation-for="Appointment.VehicleID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Appointment.VehicleReg" class="control-label"></label>
+                <label asp-for="Appointment.VehicleReg" class="control-label">Vehicle Registration</label>
                 <input asp-for="Appointment.VehicleReg" class="form-control" />
                 <span asp-validation-for="Appointment.VehicleReg" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Appointment.Date" class="control-label"></label>
+                <label asp-for="Appointment.Date" class="control-label">Appointment Date</label>
                 <input asp-for="Appointment.Date" class="form-control" />
                 <span asp-validation-for="Appointment.Date" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Appointment.Description" class="control-label"></label>
+                <label asp-for="Appointment.Description" class="control-label">Description</label>
                 <input asp-for="Appointment.Description" class="form-control" />
                 <span asp-validation-for="Appointment.Description" class="text-danger"></span>
             </div>
+            <br /><br />
             <div class="form-group">
-                <label asp-for="Appointment.Status" class="control-label"></label>
-                <select asp-for="Appointment.Status" class="form-control"></select>
-                <span asp-validation-for="Appointment.Status" class="text-danger"></span>
+                <input type="submit" value="Submit Request" class="btn btn-secondary" />
+                <a asp-page="Index" class="btn btn-secondary">Cancel</a>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-page="Index">Back to List</a>
+<!-- Modal -->
+<div class="modal fade" id="emailNotFoundModal" tabindex="-1" role="dialog" aria-labelledby="emailNotFoundModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="emailNotFoundModalLabel">Email Not Found</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>The specified customer email was not found in the system.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        // Show the email not found modal if the specified customer email was not found
+        @if (!ModelState.IsValid && ViewData.ModelState.ContainsKey("Appointment.CustomerEmail"))
+        {
+            @:$("#emailNotFoundModal").modal("show");
+        }
+    </script>
 }

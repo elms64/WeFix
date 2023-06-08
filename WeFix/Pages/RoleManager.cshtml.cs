@@ -25,58 +25,80 @@ namespace WeFix.Pages
             UserRoles = new List<UserRoleViewModel>();
         }
 
-        public void OnGet()
+        public async Task<IActionResult> OnGet()
         {
-            UserRoles = _userManager.Users.Select(user => new UserRoleViewModel
-            {
-                UserName = user.UserName,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                Surname = user.Surname,
-                Roles = _userManager.GetRolesAsync(user).Result.ToList()
-            }).ToList();
-        }
+            var users = _userManager.Users.ToList();
 
-        public async Task<IActionResult> OnPostRemoveRolesAsync(string userId)
-        {
-            var user = await _userManager.FindByNameAsync(userId);
-            if (user == null)
+            foreach (var user in users)
             {
-                return NotFound();
+                var userRoles = await _userManager.GetRolesAsync(user);
+                UserRoles.Add(new UserRoleViewModel
+                {
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    Surname = user.Surname,
+                    Roles = userRoles.ToList()
+                });
             }
 
-            var roles = await _userManager.GetRolesAsync(user);
-            var deleteList = roles.ToList();
+            return Page();
+        }
 
-            foreach (var roleName in deleteList)
+        public async Task<IActionResult> OnPostAddRoles(string userId, string selectedRole, string returnUrl)
+        {
+            var user = await _userManager.FindByNameAsync(userId);
+
+            if (user != null && !string.IsNullOrEmpty(selectedRole))
             {
-                var result = await _userManager.RemoveFromRoleAsync(user, roleName);
-                if (!result.Succeeded)
+                var userRoles = await _userManager.GetRolesAsync(user);
+
+                if (!userRoles.Contains(selectedRole))
                 {
-                    // Handle the error, e.g., log it or display an error message
-                    return BadRequest();
+                    await _userManager.AddToRoleAsync(user, selectedRole);
                 }
             }
 
-            return RedirectToPage("RoleManager");
+            return Redirect(returnUrl);
         }
 
-        public async Task<IActionResult> OnPostAddRolesAsync(string userId)
+        public async Task<IActionResult> OnPostRemoveRoles(string userId, string returnUrl)
         {
             var user = await _userManager.FindByNameAsync(userId);
-            if (user == null)
+
+            if (user != null)
             {
-                return NotFound();
+                var userRoles = await _userManager.GetRolesAsync(user);
+
+                if (userRoles.Any())
+                {
+                    await _userManager.RemoveFromRolesAsync(user, userRoles);
+                }
             }
 
-            var defaultrole = _roleManager.FindByNameAsync("User").Result;
-
-            if (defaultrole != null)
-            {
-                IdentityResult roleresult = await _userManager.AddToRoleAsync(user, defaultrole.Name);
-            }
-
-            return RedirectToPage("RoleManager");
+            return Redirect(returnUrl);
         }
+
+        public async Task<IActionResult> OnPostDeleteUserAsync(string userId, string returnUrl)
+        {
+            var user = await _userManager.FindByNameAsync(userId);
+
+            if (user != null)
+            {
+                var result = await _userManager.DeleteAsync(user);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToPage(returnUrl);
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Error deleting user.");
+                }
+            }
+
+            return RedirectToPage();
+        }
+
     }
 }

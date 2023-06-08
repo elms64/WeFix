@@ -5,11 +5,27 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h2>Appointment Booking Service</h2>
+<br />
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
+@if (User.IsInRole("SysAdmin") || User.IsInRole("Manager") || User.IsInRole("Technician") || User.IsInRole("Reception"))
+{
+    <form asp-page="Create"> <button class="btn btn-secondary">Submit request for new customer appointment</button> </form>
+}
+else
+{
+    <form asp-page="UserCreate"> <button class="btn btn-secondary">Submit request for new appointment</button> </form>
+}
+
+
+<br />
+@if (User.IsInRole("SysAdmin") || User.IsInRole("Manager") || User.IsInRole("Technician") || User.IsInRole("Reception"))
+{<h3>View all appointments</h3>}
+
+else if (User.IsInRole("User"))
+{<h3>Your Appointments</h3>}
+
+
 <table class="table">
     <thead>
         <tr>
@@ -17,7 +33,13 @@
                 @Html.DisplayNameFor(model => model.Appointment[0].OwnerID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Appointment[0].VehicleID)
+                @Html.DisplayNameFor(model => model.Appointment[0].FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Appointment[0].Surname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Appointment[0].Email)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Appointment[0].VehicleReg)
@@ -39,10 +61,16 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.OwnerID)
+                    @Html.DisplayFor(modelItem => modelItem.UserNames[item.OwnerID])
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.VehicleID)
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Surname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.VehicleReg)
@@ -57,22 +85,13 @@
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @if ((await AuthorizationService.AuthorizeAsync(
-                    User, item,
-                    AppointmentOperations.Update)).Succeeded)
+                    @if ((await AuthorizationService.AuthorizeAsync(User, item, AppointmentOperations.Update)).Succeeded)
                     {
                         <a asp-page="./Edit" asp-route-id="@item.AppointmentID">Edit</a>
                         <text> | </text>
                     }
-
                     <a asp-page="./Details" asp-route-id="@item.AppointmentID">Details</a>
-
-                    @if ((await AuthorizationService.AuthorizeAsync(
-                    User, item,
-                    AppointmentOperations.Delete)).Succeeded)
+                    @if ((await AuthorizationService.AuthorizeAsync(User, item, AppointmentOperations.Delete)).Succeeded)
                     {
                         <text> | </text>
                         <a asp-page="./Delete" asp-route-id="@item.AppointmentID">Delete</a>
@@ -82,3 +101,7 @@
         }
     </tbody>
 </table>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -4,12 +4,25 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Car Parts Database</h1>
+<br />
 
-<p>
-    <a asp-page="Create">Log a New Part</a>
-</p>
+@if (User.IsInRole("SysAdmin") || User.IsInRole("Manager") || User.IsInRole("Technician"))
+{
+    <p>
+        <a asp-page="Create">Log a New Part</a>
+    </p>
+}
+else if (User.IsInRole("User") || User.IsInRole("Reception"))
+{
+    <p>
+        Use this page to lookup all parts we currently have in stock. Feel free to send us an enquiry about any
+        parts you wish to purchase or for us to order in if you can't find what you are looking for!
+    </p>
+    <p><a asp-page="Contact">Contact Us</a></p>
+    <br />
 
+}
 <p><h4>Search and Filter</h4></p>
 <form>
     <p>
@@ -20,7 +33,7 @@
         Model: <select asp-for="CarModelInput" asp-items="Model.CarModels">
             <option value="">All</option>
         </select>
-        <input type="submit" value="Filter" class="btn btn-primary" />
+        <input type="submit" value="Filter" class="btn btn-secondary btn-sm" />
     </p>
 </form>
 
@@ -65,12 +78,23 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.StockQuantity)
                 </td>
-                <td>
-                    <!-- Links to edit, details and delete pages -->
-                    <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
-                    <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
-                </td>
+
+                @if (User.IsInRole("SysAdmin") || User.IsInRole("Manager") || User.IsInRole("Technician"))
+                {
+                    <td>
+                        <!-- Links to edit, details and delete pages -->
+                        <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
+                        <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
+                    </td>
+                }
+                else if (User.IsInRole("User") || User.IsInRole("Reception"))
+                {
+                    <td>
+                        <!-- No links to show -->
+                    </td>
+                }
+
             </tr>
         }
     </tbody>

@@ -12,10 +12,12 @@ public class Appointment
     // user ID from AspNetUser table.
     public string? OwnerID { get; set; }
 
+    [Display(Name = "First Name")]
+    public string? FirstName { get; set; }
 
+    public string? Surname { get; set; }
 
-    [Display(Name = "Vehicle ID")]
-    public string? VehicleID { get; set; }
+    public string? Email { get; set; }
 
     [Display(Name = "Vehicle Registration Number")]
     public string? VehicleReg { get; set; }
@@ -24,8 +26,8 @@ public class Appointment
     [Display(Name = "Date")]
     public DateTime Date { get; set; }
 
-    [StringLength(500, MinimumLength = 3), Required]
-    [Display(Name = "Description")]
+    [StringLength(1000, MinimumLength = 3), Required]
+    [Display(Name = "Describe your issue or service type")]
     public string? Description { get; set; }
 
 

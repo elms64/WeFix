@@ -12,7 +12,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3" style="background-color: #2C3333;">
+        <nav class="navbar fixed-top navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3" style="background-color: #2C3333;">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-page="/Index">WeFix</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -31,6 +31,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-page="/Appointments/Index">Appointments</a>
                         </li>
+                        @if (User.IsInRole("Technician"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-page="/TechnicianSystem">Technicians</a>
+                            </li>
+                        }
                         @if (User.IsInRole("SysAdmin"))
                         {
                             <li class="nav-item">
@@ -44,13 +50,7 @@
                             </li>
                         }
 
-                        @if (User.IsInRole("SysAdmin") || User.IsInRole("Manager") || User.IsInRole("Reception"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-page="/Customers/Index">Customers</a>
-                            </li>
-                        }
-                        else { }
+
 
                     </ul>
                     <partial name="_LoginPartial" />

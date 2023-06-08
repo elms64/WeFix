@@ -14,6 +14,7 @@ using WeFix.Authorization;
 
 namespace WeFix.Pages.Appointments
 {
+    [Authorize]
     public class DetailsModel : DI_BasePageModel
     {
         public DetailsModel(

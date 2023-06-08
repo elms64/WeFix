@@ -18,12 +18,7 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Appointment.OwnerID)
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Appointment.VehicleID)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Appointment.VehicleID)
-        </dd>
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Appointment.VehicleReg)
         </dt>
@@ -49,7 +44,7 @@
             @Html.DisplayFor(model => model.Appointment.Status)
         </dd>
     </dl>
-    
+
     <form method="post">
         <input type="hidden" asp-for="Appointment.AppointmentID" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |

@@ -1,0 +1,58 @@
+﻿@page
+@model WeFix.Pages.TechnicianSystemModel
+
+<h1>Technician System</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>Appointments</h2>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Customer Name</th>
+                        <th>Vehicle Reg</th>
+                        <th>Date</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var appointment in Model.AppointmentSummaries.Select((value, index) => new { Value = value, Index = index }))
+                    {
+                        <tr class="@((Model.SelectedAppointmentIndex == appointment.Index) ? "table-primary" : "")"
+                            onclick="location.href='?selectedAppointment=@appointment.Index'">
+                            <td>@appointment.Value.CustomerName</td>
+                            <td>@appointment.Value.VehicleReg</td>
+                            <td>@appointment.Value.Date</td>
+                            <td>@appointment.Value.Description</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h2>Appointment Details</h2>
+        @if (Model.SelectedAppointmentIndex.HasValue)
+        {
+            var selectedAppointment = Model.AppointmentSummaries[Model.SelectedAppointmentIndex.Value];
+            <div>
+                <h4>Customer Name:</h4>
+                <p>@selectedAppointment.CustomerName</p>
+                <h4>Vehicle Reg:</h4>
+                <p>@selectedAppointment.VehicleReg</p>
+                <h4>Date:</h4>
+                <p>@selectedAppointment.Date</p>
+                <h4>Description:</h4>
+                <p>@selectedAppointment.Description</p>
+            </div>
+            <form method="post" asp-page-handler="SubmitForm">
+                <input type="submit" class="btn btn-primary" value="Submit Completed Form" />
+            </form>
+        }
+        else
+        {
+            <p>No appointment selected.</p>
+        }
+    </div>
+</div>

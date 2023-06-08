@@ -23,12 +23,12 @@ public static class SeedData
             // dotnet user-secrets set SeedUserPW <pw>
             // The admin user can do anything
 
-            var adminID = await EnsureUser(serviceProvider, testUserPw, "admin@contoso.com");
-            await EnsureRole(serviceProvider, adminID, Constants.AppointmentAdministratorsRole);
+            // var adminID = await EnsureUser(serviceProvider, testUserPw, "admin@contoso.com");
+            //  await EnsureRole(serviceProvider, adminID, Constants.AppointmentAdministratorsRole);
 
             // allowed user can create and edit contacts that they create
-            var managerID = await EnsureUser(serviceProvider, testUserPw, "manager@contoso.com");
-            await EnsureRole(serviceProvider, managerID, Constants.AppointmentManagersRole);
+            //  var managerID = await EnsureUser(serviceProvider, testUserPw, "manager@contoso.com");
+            //   await EnsureRole(serviceProvider, managerID, Constants.AppointmentManagersRole);
 
 
             if (context == null)
@@ -80,37 +80,15 @@ public static class SeedData
             }
 
 
-            if (!context.Appointment.Any())
-            {
-                context.Appointment.AddRange(
-                    new Appointment
-                    {
-                        VehicleReg = "X648 WAA",
-                        Date = DateTime.Parse("2023-10-20"),
-                        Description = "Alternator replacement",
-                        Status = AppointmentStatus.Approved,
-                        OwnerID = adminID
-                    },
-                     new Appointment
-                     {
-                         VehicleReg = "LD54 HFR",
-                         Date = DateTime.Parse("2023-07-22"),
-                         Description = "Tyre Replacement",
-                         Status = AppointmentStatus.Approved,
-                         OwnerID = adminID
-                     }
-                    );
-                context.SaveChanges();
-            }
-
 
             // Create users with roles
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-            await CreateUserWithRole(userManager, "user1@example.com", "Test1234,", "John", "Doe", "User");
-            await CreateUserWithRole(userManager, "reception1@example.com", "Test1234,", "Jane", "Doe", "Reception");
-            await CreateUserWithRole(userManager, "technician1@example.com", "Test1234,", "Jack", "Doe", "Technician");
-            await CreateUserWithRole(userManager, "manager1@example.com", "Test1234,", "Jan", "Doe", "Manager");
+            await CreateUserWithRole(userManager, "admin@example.com", testUserPw, "John", "Doe", "SysAdmin");
+            await CreateUserWithRole(userManager, "user1@example.com", testUserPw, "John", "Doe", "User");
+            await CreateUserWithRole(userManager, "reception1@example.com", testUserPw, "Jane", "Doe", "Reception");
+            await CreateUserWithRole(userManager, "technician1@example.com", testUserPw, "Jack", "Doe", "Technician");
+            await CreateUserWithRole(userManager, "manager1@example.com", testUserPw, "Jan", "Doe", "Manager");
         }
     }
 

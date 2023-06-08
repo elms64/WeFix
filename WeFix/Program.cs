@@ -34,13 +34,13 @@ internal class Program
         builder.Services.AddRazorPages();
 
         //Sets the fallback policy so that only authorised users can access resources unless explicitly defined with the [AllowAnonymous] attribute
-        builder.Services.AddControllers(config =>
-        {
-            var policy = new AuthorizationPolicyBuilder()
-                             .RequireAuthenticatedUser()
-                             .Build();
-            config.Filters.Add(new AuthorizeFilter(policy));
-        });
+        //  builder.Services.AddControllers(config =>
+        //   {
+        //        var policy = new AuthorizationPolicyBuilder()
+        //                        .RequireAuthenticatedUser()
+        //                        .Build();
+        //        config.Filters.Add(new AuthorizeFilter(policy));
+        ///   });
 
         builder.Services.AddScoped<IAuthorizationHandler,
                       ContactIsOwnerAuthorizationHandler>();
@@ -114,32 +114,32 @@ internal class Program
         }
 
         //Automatically create an Admin account with full access (password can be changed later)
-        using (var scope = app.Services.CreateScope())
-        {
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        /*   using (var scope = app.Services.CreateScope())
+           {
+               var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-            string email = "admin@admin.com";
-            string password = "Test1234,";
+               string email = "admin@admin.com";
+               string password = "Test1234,";
 
-            if (await userManager.FindByEmailAsync(email) == null)
-            {
-                var user = new ApplicationUser
-                {
-                    FirstName = "System Admin",
-                    Surname = "Admin",
-                    UserName = "SysAdmin",
-                    Email = email,
-                    EmailConfirmed = true
-                };
+               if (await userManager.FindByEmailAsync(email) == null)
+               {
+                   var user = new ApplicationUser
+                   {
+                       FirstName = "System Admin",
+                       Surname = "Admin",
+                       UserName = "SysAdmin",
+                       Email = email,
+                       EmailConfirmed = true
+                   };
 
-                await userManager.CreateAsync(user, password);
+                   await userManager.CreateAsync(user, password);
 
-                await userManager.AddToRoleAsync(user, "SysAdmin");
-            }
+                   await userManager.AddToRoleAsync(user, "SysAdmin");
+               }
 
 
-        }
-
+           }
+        */
         //Seed some parts data into the database from the 'SeedData' class
         /// using (var scope = app.Services.CreateScope())
         // {

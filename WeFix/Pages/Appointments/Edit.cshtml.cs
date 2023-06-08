@@ -15,6 +15,7 @@ using WeFix.Areas.Identity.Data;
 
 namespace WeFix.Pages.Appointments
 {
+    [Authorize]
     public class EditModel : DI_BasePageModel
     {
         public EditModel(

@@ -14,6 +14,7 @@ using WeFix.Areas.Identity.Data;
 
 namespace WeFix.Pages.Appointments
 {
+    [Authorize]
     public class DeleteModel : DI_BasePageModel
     {
         public DeleteModel(

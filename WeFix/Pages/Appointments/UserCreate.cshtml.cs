@@ -10,14 +10,14 @@ using WeFix.Models;
 
 namespace WeFix.Pages.Appointments
 {
-    [Authorize(Roles = "SysAdmin, Manager, Reception, Technician")]
-    public class CreateModel : PageModel
+    [Authorize(Roles = "User")]
+    public class UserCreateModel : PageModel
     {
         private readonly ApplicationDbContext _context;
         private readonly IAuthorizationService _authorizationService;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public CreateModel(
+        public UserCreateModel(
             ApplicationDbContext context,
             IAuthorizationService authorizationService,
             UserManager<ApplicationUser> userManager)
@@ -34,6 +34,7 @@ namespace WeFix.Pages.Appointments
 
         [BindProperty]
         public Appointment Appointment { get; set; }
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -41,30 +42,14 @@ namespace WeFix.Pages.Appointments
                 return Page();
             }
 
-            var owner = await _userManager.GetUserAsync(User);
+            var owner = await _userManager.FindByEmailAsync(User.Identity.Name);
             if (owner == null)
             {
                 return NotFound("Owner not found.");
             }
 
-            if (User.IsInRole("SysAdmin") || User.IsInRole("Manager") || User.IsInRole("Reception") || User.IsInRole("Technician"))
-            {
-                var specifiedCustomer = await _userManager.FindByEmailAsync(Appointment.Email);
-                if (specifiedCustomer == null)
-                {
-                    ModelState.AddModelError(string.Empty, "The specified customer email was not found in the system.");
-                    return Page();
-                }
-                Appointment.OwnerID = specifiedCustomer.Id;
-                Appointment.FirstName = specifiedCustomer.FirstName;
-                Appointment.Surname = specifiedCustomer.Surname;
-            }
-            else
-            {
-                Appointment.OwnerID = owner.Id;
-                Appointment.FirstName = owner.FirstName;
-                Appointment.Surname = owner.Surname;
-            }
+            Appointment.OwnerID = owner.Id;
+            Appointment.Status = AppointmentStatus.Submitted;
 
             var isAuthorized = await _authorizationService.AuthorizeAsync(
                                     User, Appointment, AppointmentOperations.Create);
@@ -73,13 +58,10 @@ namespace WeFix.Pages.Appointments
                 return Forbid();
             }
 
-            Appointment.Status = AppointmentStatus.Submitted; // Set the status to Pending
-
             _context.Appointment.Add(Appointment);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
         }
-
     }
 }

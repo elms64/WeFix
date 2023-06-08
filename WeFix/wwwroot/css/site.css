@@ -21,8 +21,21 @@ body {
     margin-bottom: 60px;
     font-family: Comfortaa;
     padding-bottom: 120px;
+    padding-top: 70px;
+    padding-left: 150px;
+    padding-right: 150px;
 }
 
+
+.scrollable-container {
+    max-width: 50%; /* Adjust the width as needed */
+    height: 400px; /* Set a fixed height to enable scrolling */
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+</style >
 /*tab navigation*/
 .login-logout-card .card-header {
     padding: 0px 0px 12px 0px;
