@@ -1,58 +1,97 @@
 ﻿@page
 @model WeFix.Pages.TechnicianSystemModel
+@{
+    ViewData["Title"] = "Technician System";
+}
 
 <h1>Technician System</h1>
-
+<hr />
 <div class="row">
-    <div class="col-md-6">
-        <h2>Appointments</h2>
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Customer Name</th>
-                        <th>Vehicle Reg</th>
-                        <th>Date</th>
-                        <th>Description</th>
+    <div class="col-md-7">
+        <h3>Today's Appointments</h3>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Customer Name</th>
+                    <th>Vehicle Reg</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var appointment in Model.AppointmentSummaries.Where(a => a.Date.Date == DateTime.Today))
+                {
+                    <tr class="appointment-row" data-appointment-id="@appointment.AppointmentId">
+                        <td>@appointment.CustomerName</td>
+                        <td>@appointment.VehicleReg</td>
+                        <td>@appointment.Date</td>
+                        <td>@appointment.Description</td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var appointment in Model.AppointmentSummaries.Select((value, index) => new { Value = value, Index = index }))
-                    {
-                        <tr class="@((Model.SelectedAppointmentIndex == appointment.Index) ? "table-primary" : "")"
-                            onclick="location.href='?selectedAppointment=@appointment.Index'">
-                            <td>@appointment.Value.CustomerName</td>
-                            <td>@appointment.Value.VehicleReg</td>
-                            <td>@appointment.Value.Date</td>
-                            <td>@appointment.Value.Description</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                }
+            </tbody>
+        </table>
+        <br />
+        <h3>Upcoming Appointments</h3>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Customer Name</th>
+                    <th>Vehicle Reg</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var appointment in Model.AppointmentSummaries.Where(a => a.Date.Date > DateTime.Today))
+                {
+                    <tr class="appointment-row" data-appointment-id="@appointment.AppointmentId">
+                        <td>@appointment.CustomerName</td>
+                        <td>@appointment.VehicleReg</td>
+                        <td>@appointment.Date</td>
+                        <td>@appointment.Description</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
-    <div class="col-md-6">
-        <h2>Appointment Details</h2>
+    <div class="col-md-4">
         @if (Model.SelectedAppointmentIndex.HasValue)
         {
             var selectedAppointment = Model.AppointmentSummaries[Model.SelectedAppointmentIndex.Value];
-            <div>
-                <h4>Customer Name:</h4>
-                <p>@selectedAppointment.CustomerName</p>
-                <h4>Vehicle Reg:</h4>
-                <p>@selectedAppointment.VehicleReg</p>
-                <h4>Date:</h4>
-                <p>@selectedAppointment.Date</p>
-                <h4>Description:</h4>
-                <p>@selectedAppointment.Description</p>
+            <div class="card">
+                <div class="card-header">
+                    Appointment Details
+                    <span class="close-button float-right" onclick="closeCard()">&nbsp&nbspX&nbsp&nbsp</span>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Appointment ID: @selectedAppointment.AppointmentId</h5>
+                    <p class="card-text">Customer Name: @selectedAppointment.CustomerName</p>
+                    <p class="card-text">Vehicle Reg: @selectedAppointment.VehicleReg</p>
+                    <p class="card-text">Date: @selectedAppointment.Date</p>
+                    <p class="card-text">Description: @selectedAppointment.Description</p>
+                    <form method="post" asp-page-handler="CompleteInspection">
+                        <input type="hidden" name="appointmentId" value="@selectedAppointment.AppointmentId" />
+                        <button type="submit" class="btn btn-secondary" style="float:left">Complete Inspection</button>
+                    </form>
+                    <form method="post" asp-page-handler="CompleteJob">
+                        <input type="hidden" name="appointmentId" value="@selectedAppointment.AppointmentId" />
+                        <button type="submit" class="btn btn-secondary" style="float:right">Complete Job</button>
+                    </form>
+                </div>
             </div>
-            <form method="post" asp-page-handler="SubmitForm">
-                <input type="submit" class="btn btn-primary" value="Submit Completed Form" />
-            </form>
-        }
-        else
-        {
-            <p>No appointment selected.</p>
         }
     </div>
 </div>
+
+@section Scripts {
+    <script>function closeCard() {
+            window.location.href = '?selectedAppointment=null';
+        }
+
+        $('.appointment-row').click(function () {
+            var appointmentId = $(this).data('appointment-id');
+            window.location.href = '?selectedAppointment=' + appointmentId;
+        });</script>
+}

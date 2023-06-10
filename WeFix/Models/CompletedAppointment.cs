@@ -1,23 +1,34 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using WeFix.Areas.Identity.Data;
+
 namespace WeFix.Models
 {
     public class CompletedAppointment
     {
-        public string CustomerName { get; set; }
-        public string VehicleReg { get; set; }
-        public DateTime Date { get; set; }
-        public string Description { get; set; }
-        public List<UsedPart> UsedParts { get; set; }
+        [Key]
+        public int Id { get; set; }
 
-        // Other properties and methods for the completed appointment
+        [Display(Name = "Appointment ID")]
+        public int AppointmentId { get; set; }
 
-        public class UsedPart
-        {
-            public string PartName { get; set; }
-            public int QuantityUsed { get; set; }
+        [Display(Name = "Technician ID")]
+        public string TechnicianId { get; set; }
 
-            // Other properties for the used part
-        }
+        [Display(Name = "Technician")]
+        public string TechnicianName { get; set; }
+
+        [Display(Name = "Completion Date")]
+        public DateTime CompletionDate { get; set; }
+
+        [Display(Name = "Job Details")]
+        public string JobDetails { get; set; }
+
+        // Navigation properties
+        public Appointment Appointment { get; set; }
+        public ApplicationUser Technician { get; set; }
+
+        public ICollection<AppointmentPartsUsed> AppointmentParts { get; set; }
     }
 }
-

@@ -10,7 +10,7 @@ using WeFix.Models;
 
 namespace WeFix.Pages.Appointments
 {
-    [Authorize(Roles = "SysAdmin, Manager, Reception, Technician")]
+    [Authorize]
     public class CreateModel : PageModel
     {
         private readonly ApplicationDbContext _context;
@@ -34,6 +34,7 @@ namespace WeFix.Pages.Appointments
 
         [BindProperty]
         public Appointment Appointment { get; set; }
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -52,7 +53,7 @@ namespace WeFix.Pages.Appointments
                 var specifiedCustomer = await _userManager.FindByEmailAsync(Appointment.Email);
                 if (specifiedCustomer == null)
                 {
-                    ModelState.AddModelError(string.Empty, "The specified customer email was not found in the system.");
+                    ModelState.AddModelError("Appointment.Email", "The specified customer email was not found in the system.");
                     return Page();
                 }
                 Appointment.OwnerID = specifiedCustomer.Id;
@@ -66,8 +67,7 @@ namespace WeFix.Pages.Appointments
                 Appointment.Surname = owner.Surname;
             }
 
-            var isAuthorized = await _authorizationService.AuthorizeAsync(
-                                    User, Appointment, AppointmentOperations.Create);
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, Appointment, AppointmentOperations.Create);
             if (!isAuthorized.Succeeded)
             {
                 return Forbid();
@@ -80,6 +80,5 @@ namespace WeFix.Pages.Appointments
 
             return RedirectToPage("./Index");
         }
-
     }
 }

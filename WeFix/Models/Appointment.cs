@@ -38,7 +38,10 @@ public enum AppointmentStatus
 {
     Submitted,
     Approved,
-    Rejected
+    Rejected,
+    Inspected,
+    OnHold,
+    Completed
 }
 
 

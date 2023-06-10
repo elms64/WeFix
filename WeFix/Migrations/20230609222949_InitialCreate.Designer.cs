@@ -11,7 +11,7 @@ using WeFix.Data;
 namespace WeFix.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230608003514_InitialCreate")]
+    [Migration("20230609222949_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -267,6 +267,67 @@ namespace WeFix.Migrations
                     b.ToTable("Appointment", "Identity");
                 });
 
+            modelBuilder.Entity("WeFix.Models.AppointmentPartsUsed", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CompletedAppointmentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PartId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PartName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("QuantityUsed")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompletedAppointmentId");
+
+                    b.HasIndex("PartId");
+
+                    b.ToTable("AppointmentPartsUsed", "Identity");
+                });
+
+            modelBuilder.Entity("WeFix.Models.CompletedAppointment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("AppointmentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CompletionDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("JobDetails")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TechnicianId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TechnicianName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppointmentId");
+
+                    b.HasIndex("TechnicianId");
+
+                    b.ToTable("CompletedAppointment", "Identity");
+                });
+
             modelBuilder.Entity("WeFix.Models.Customer", b =>
                 {
                     b.Property<int>("CustomerID")
@@ -384,6 +445,49 @@ namespace WeFix.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("WeFix.Models.AppointmentPartsUsed", b =>
+                {
+                    b.HasOne("WeFix.Models.CompletedAppointment", "CompletedAppointment")
+                        .WithMany("AppointmentParts")
+                        .HasForeignKey("CompletedAppointmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WeFix.Models.Part", "Part")
+                        .WithMany()
+                        .HasForeignKey("PartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CompletedAppointment");
+
+                    b.Navigation("Part");
+                });
+
+            modelBuilder.Entity("WeFix.Models.CompletedAppointment", b =>
+                {
+                    b.HasOne("WeFix.Models.Appointment", "Appointment")
+                        .WithMany()
+                        .HasForeignKey("AppointmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WeFix.Areas.Identity.Data.ApplicationUser", "Technician")
+                        .WithMany()
+                        .HasForeignKey("TechnicianId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Appointment");
+
+                    b.Navigation("Technician");
+                });
+
+            modelBuilder.Entity("WeFix.Models.CompletedAppointment", b =>
+                {
+                    b.Navigation("AppointmentParts");
                 });
 #pragma warning restore 612, 618
         }

@@ -42,13 +42,16 @@ namespace WeFix.Pages.Appointments
                 return Page();
             }
 
-            var owner = await _userManager.FindByEmailAsync(User.Identity.Name);
+            var owner = await _userManager.GetUserAsync(User);
             if (owner == null)
             {
                 return NotFound("Owner not found.");
             }
 
             Appointment.OwnerID = owner.Id;
+            Appointment.FirstName = owner.FirstName;
+            Appointment.Surname = owner.Surname;
+            Appointment.Email = owner.Email;
             Appointment.Status = AppointmentStatus.Submitted;
 
             var isAuthorized = await _authorizationService.AuthorizeAsync(

@@ -1,0 +1,33 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Contact";
+}
+
+<div class="card">
+    <div class="card-header" style="padding:20px">
+        <div style="clear: both">
+            <h2 style="float: left">Contact Us</h2>
+
+        </div>
+
+    </div>
+    <div class="card-body" style="text-align:center">
+        <br /><h3>If you need to get in touch, give us a call or email!</h3>
+        <br /><br />
+        <p class="card-text">
+            Contact Number: 0800 293 452 333
+        <p>
+            Email: info@wefix.com
+        </p>
+
+        <br /><br />
+
+        <a class="btn btn-secondary" asp-area="Identity" asp-page="/Account/Register">Sign up for an account!</a>
+        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+        <a class="btn btn-secondary" asp-area="Identity" asp-page="/Account/Login">Login and view your bookings</a>
+        <br /><br /><br /><br /><br />
+    </div>
+</div>
+
+

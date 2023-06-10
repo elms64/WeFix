@@ -44,7 +44,7 @@ public static class SeedData
                     {
                         PartName = "Sparco Steering Wheel",
                         ReleaseDate = DateTime.Parse("1989-2-12"),
-                        CarModel = "Universal",
+                        CarModel = "Aftermarket",
                         Price = 87.99M,
                         StockQuantity = 12
                     },
@@ -53,7 +53,7 @@ public static class SeedData
                     {
                         PartName = "13inch Tyres",
                         ReleaseDate = DateTime.Parse("2021-1-27"),
-                        CarModel = "Universal",
+                        CarModel = "Aftermarket",
                         Price = 29.99M,
                         StockQuantity = 12
                     },
@@ -74,7 +74,35 @@ public static class SeedData
                         CarModel = "Carry Van",
                         Price = 284.59M,
                         StockQuantity = 4
-                    }
+                    },
+
+                     new Part
+                     {
+                         PartName = "Alternator",
+                         ReleaseDate = DateTime.Parse("2015-2-12"),
+                         CarModel = "Alto",
+                         Price = 284.59M,
+                         StockQuantity = 4
+                     },
+
+                      new Part
+                      {
+                          PartName = "Alternator",
+                          ReleaseDate = DateTime.Parse("2010-2-12"),
+                          CarModel = "Aftermarket",
+                          Price = 284.59M,
+                          StockQuantity = 4
+                      },
+
+                       new Part
+                       {
+                           PartName = "Drivers-Side Wing Mirror",
+                           ReleaseDate = DateTime.Parse("1989-2-12"),
+                           CarModel = "Super Carry Pickup",
+                           Price = 284.59M,
+                           StockQuantity = 4
+                       }
+
                 );
                 await context.SaveChangesAsync();
             }
@@ -84,11 +112,15 @@ public static class SeedData
             // Create users with roles
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-            await CreateUserWithRole(userManager, "admin@example.com", testUserPw, "John", "Doe", "SysAdmin");
-            await CreateUserWithRole(userManager, "user1@example.com", testUserPw, "John", "Doe", "User");
-            await CreateUserWithRole(userManager, "reception1@example.com", testUserPw, "Jane", "Doe", "Reception");
-            await CreateUserWithRole(userManager, "technician1@example.com", testUserPw, "Jack", "Doe", "Technician");
-            await CreateUserWithRole(userManager, "manager1@example.com", testUserPw, "Jan", "Doe", "Manager");
+            await CreateUserWithRole(userManager, "admin@example.com", testUserPw, "Admin", "User", "SysAdmin");
+            await CreateUserWithRole(userManager, "customer@example.com", testUserPw, "Customer", "User", "User");
+            await CreateUserWithRole(userManager, "customer1@example.com", testUserPw, "Customer1", "User", "User");
+            await CreateUserWithRole(userManager, "customer2@example.com", testUserPw, "Customer2", "User", "User");
+            await CreateUserWithRole(userManager, "customer3@example.com", testUserPw, "Customer3", "User", "User");
+            await CreateUserWithRole(userManager, "customer4@example.com", testUserPw, "Customer4", "User", "User");
+            await CreateUserWithRole(userManager, "reception@example.com", testUserPw, "Reception", "User", "Reception");
+            await CreateUserWithRole(userManager, "technician@example.com", testUserPw, "Technician", "User", "Technician");
+            await CreateUserWithRole(userManager, "manager@example.com", testUserPw, "Manager", "User", "Manager");
         }
     }
 
