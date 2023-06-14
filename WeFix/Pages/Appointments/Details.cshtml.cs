@@ -29,7 +29,7 @@ namespace WeFix.Pages.Appointments
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            Appointment? _appointment = await Context.Appointment.FirstOrDefaultAsync(m => m.AppointmentID == id);
+            Appointment? _appointment = await Context.Appointment.FirstOrDefaultAsync(m => m.Id == id);
 
             if (_appointment == null)
             {
@@ -38,6 +38,8 @@ namespace WeFix.Pages.Appointments
             Appointment = _appointment;
 
             var isAuthorized = User.IsInRole(Constants.AppointmentManagersRole) ||
+                                User.IsInRole(Constants.ReceptionRole) ||
+                                User.IsInRole(Constants.TechnicianRole) ||
                                User.IsInRole(Constants.AppointmentAdministratorsRole);
 
             var currentUserId = UserManager.GetUserId(User);
@@ -55,7 +57,7 @@ namespace WeFix.Pages.Appointments
         public async Task<IActionResult> OnPostAsync(int id, AppointmentStatus status)
         {
             var appointment = await Context.Appointment.FirstOrDefaultAsync(
-                                                      m => m.AppointmentID == id);
+                                                      m => m.Id == id);
 
             if (appointment == null)
             {

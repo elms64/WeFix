@@ -32,7 +32,7 @@ namespace WeFix.Pages.Appointments
         public async Task<IActionResult> OnGetAsync(int id)
         {
             Appointment? appointment = await Context.Appointment.FirstOrDefaultAsync(
-                                                             m => m.AppointmentID == id);
+                                                             m => m.Id == id);
             if (appointment == null)
             {
                 return NotFound();
@@ -61,7 +61,7 @@ namespace WeFix.Pages.Appointments
             // Fetch Contact from DB to get OwnerID.
             var appointment = await Context
                 .Appointment.AsNoTracking()
-                .FirstOrDefaultAsync(m => m.AppointmentID == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (appointment == null)
             {

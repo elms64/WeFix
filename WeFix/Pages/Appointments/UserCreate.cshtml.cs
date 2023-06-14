@@ -10,7 +10,7 @@ using WeFix.Models;
 
 namespace WeFix.Pages.Appointments
 {
-    [Authorize(Roles = "User")]
+    [Authorize]
     public class UserCreateModel : PageModel
     {
         private readonly ApplicationDbContext _context;

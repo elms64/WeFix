@@ -31,6 +31,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-page="/Appointments/Index">Appointments</a>
                         </li>
+
                         @if (User.IsInRole("Technician"))
                         {
                             <li class="nav-item">

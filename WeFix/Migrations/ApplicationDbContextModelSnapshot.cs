@@ -19,6 +19,86 @@ namespace WeFix.Migrations
                 .HasDefaultSchema("Identity")
                 .HasAnnotation("ProductVersion", "7.0.5");
 
+            modelBuilder.Entity("Inspection", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("AppointmentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PartsNeededId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Inspection", "Identity");
+                });
+
+            modelBuilder.Entity("Invoice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("AppointmentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CompletionDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("JobDetails")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("LabourCost")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("LabourHours")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("LabourRate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("PartsCost")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PartsUsedId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TechnicianId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("TotalCost")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("VAT")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppointmentId");
+
+                    b.HasIndex("TechnicianId");
+
+                    b.ToTable("Invoice", "Identity");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -151,6 +231,47 @@ namespace WeFix.Migrations
                     b.ToTable("UserTokens", "Identity");
                 });
 
+            modelBuilder.Entity("WeFix.Areas.Identity.Data.Address", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AddressLine1")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AddressLine2")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PostCode")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Address", "Identity");
+                });
+
             modelBuilder.Entity("WeFix.Areas.Identity.Data.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -229,7 +350,7 @@ namespace WeFix.Migrations
 
             modelBuilder.Entity("WeFix.Models.Appointment", b =>
                 {
-                    b.Property<int>("AppointmentID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -259,9 +380,32 @@ namespace WeFix.Migrations
                     b.Property<string>("VehicleReg")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("AppointmentID");
+                    b.HasKey("Id");
 
                     b.ToTable("Appointment", "Identity");
+                });
+
+            modelBuilder.Entity("WeFix.Models.AppointmentPartsNeeded", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("InspectionId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PartId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("QuantityNeeded")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("TotalCost")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppointmentPartsNeeded", "Identity");
                 });
 
             modelBuilder.Entity("WeFix.Models.AppointmentPartsUsed", b =>
@@ -270,97 +414,28 @@ namespace WeFix.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CompletedAppointmentId")
+                    b.Property<int>("CompletedId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("InvoiceId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("PartId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("PartName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("QuantityUsed")
                         .HasColumnType("INTEGER");
 
+                    b.Property<decimal>("TotalCost")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CompletedAppointmentId");
+                    b.HasIndex("InvoiceId");
 
                     b.HasIndex("PartId");
 
                     b.ToTable("AppointmentPartsUsed", "Identity");
-                });
-
-            modelBuilder.Entity("WeFix.Models.CompletedAppointment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("AppointmentId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CompletionDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("JobDetails")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TechnicianId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TechnicianName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppointmentId");
-
-                    b.HasIndex("TechnicianId");
-
-                    b.ToTable("CompletedAppointment", "Identity");
-                });
-
-            modelBuilder.Entity("WeFix.Models.Customer", b =>
-                {
-                    b.Property<int>("CustomerID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("AddressLine1")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("AddressLine2")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("City")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Postcode")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("State")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Surname")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("CustomerID");
-
-                    b.ToTable("Customer", "Identity");
                 });
 
             modelBuilder.Entity("WeFix.Models.Part", b =>
@@ -391,6 +466,57 @@ namespace WeFix.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Part", "Identity");
+                });
+
+            modelBuilder.Entity("WeFix.Models.Vehicle", b =>
+                {
+                    b.Property<string>("VehicleReg")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CarModel")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Doors")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("EngineSize")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("OwnerID")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TransmissionType")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Year")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("VehicleReg");
+
+                    b.HasIndex("OwnerID");
+
+                    b.ToTable("Vehicle", "Identity");
+                });
+
+            modelBuilder.Entity("Invoice", b =>
+                {
+                    b.HasOne("WeFix.Models.Appointment", "Appointment")
+                        .WithMany()
+                        .HasForeignKey("AppointmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WeFix.Areas.Identity.Data.ApplicationUser", "Technician")
+                        .WithMany()
+                        .HasForeignKey("TechnicianId");
+
+                    b.Navigation("Appointment");
+
+                    b.Navigation("Technician");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -444,11 +570,22 @@ namespace WeFix.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("WeFix.Areas.Identity.Data.Address", b =>
+                {
+                    b.HasOne("WeFix.Areas.Identity.Data.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("WeFix.Models.AppointmentPartsUsed", b =>
                 {
-                    b.HasOne("WeFix.Models.CompletedAppointment", "CompletedAppointment")
+                    b.HasOne("Invoice", "Invoice")
                         .WithMany("AppointmentParts")
-                        .HasForeignKey("CompletedAppointmentId")
+                        .HasForeignKey("InvoiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -458,31 +595,21 @@ namespace WeFix.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CompletedAppointment");
+                    b.Navigation("Invoice");
 
                     b.Navigation("Part");
                 });
 
-            modelBuilder.Entity("WeFix.Models.CompletedAppointment", b =>
+            modelBuilder.Entity("WeFix.Models.Vehicle", b =>
                 {
-                    b.HasOne("WeFix.Models.Appointment", "Appointment")
+                    b.HasOne("WeFix.Areas.Identity.Data.ApplicationUser", null)
                         .WithMany()
-                        .HasForeignKey("AppointmentId")
+                        .HasForeignKey("OwnerID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("WeFix.Areas.Identity.Data.ApplicationUser", "Technician")
-                        .WithMany()
-                        .HasForeignKey("TechnicianId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Appointment");
-
-                    b.Navigation("Technician");
                 });
 
-            modelBuilder.Entity("WeFix.Models.CompletedAppointment", b =>
+            modelBuilder.Entity("Invoice", b =>
                 {
                     b.Navigation("AppointmentParts");
                 });

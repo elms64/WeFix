@@ -19,7 +19,7 @@ namespace WeFix.Migrations
                 schema: "Identity",
                 columns: table => new
                 {
-                    AppointmentID = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     OwnerID = table.Column<string>(type: "TEXT", nullable: true),
                     FirstName = table.Column<string>(type: "TEXT", nullable: true),
@@ -32,29 +32,41 @@ namespace WeFix.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Appointment", x => x.AppointmentID);
+                    table.PrimaryKey("PK_Appointment", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Customer",
+                name: "AppointmentPartsNeeded",
                 schema: "Identity",
                 columns: table => new
                 {
-                    CustomerID = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    FirstName = table.Column<string>(type: "TEXT", nullable: true),
-                    Surname = table.Column<string>(type: "TEXT", nullable: true),
-                    Email = table.Column<string>(type: "TEXT", nullable: true),
-                    Phone = table.Column<string>(type: "TEXT", nullable: true),
-                    AddressLine1 = table.Column<string>(type: "TEXT", nullable: true),
-                    AddressLine2 = table.Column<string>(type: "TEXT", nullable: true),
-                    City = table.Column<string>(type: "TEXT", nullable: true),
-                    State = table.Column<string>(type: "TEXT", nullable: true),
-                    Postcode = table.Column<string>(type: "TEXT", nullable: true)
+                    InspectionId = table.Column<int>(type: "INTEGER", nullable: false),
+                    PartId = table.Column<int>(type: "INTEGER", nullable: false),
+                    QuantityNeeded = table.Column<int>(type: "INTEGER", nullable: false),
+                    TotalCost = table.Column<decimal>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Customer", x => x.CustomerID);
+                    table.PrimaryKey("PK_AppointmentPartsNeeded", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Inspection",
+                schema: "Identity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    AppointmentId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Notes = table.Column<string>(type: "TEXT", nullable: false),
+                    PartsNeededId = table.Column<string>(type: "TEXT", nullable: false),
+                    Email = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Inspection", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -144,35 +156,68 @@ namespace WeFix.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CompletedAppointment",
+                name: "Address",
+                schema: "Identity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    AddressLine1 = table.Column<string>(type: "TEXT", nullable: false),
+                    AddressLine2 = table.Column<string>(type: "TEXT", nullable: false),
+                    City = table.Column<string>(type: "TEXT", nullable: false),
+                    State = table.Column<string>(type: "TEXT", nullable: false),
+                    PostCode = table.Column<string>(type: "TEXT", nullable: false),
+                    Country = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Address", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Address_User_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "Identity",
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Invoice",
                 schema: "Identity",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     AppointmentId = table.Column<int>(type: "INTEGER", nullable: false),
-                    TechnicianId = table.Column<string>(type: "TEXT", nullable: false),
-                    TechnicianName = table.Column<string>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    JobDetails = table.Column<string>(type: "TEXT", nullable: false),
                     CompletionDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    JobDetails = table.Column<string>(type: "TEXT", nullable: false)
+                    PartsUsedId = table.Column<string>(type: "TEXT", nullable: false),
+                    LabourHours = table.Column<decimal>(type: "TEXT", nullable: false),
+                    LabourRate = table.Column<decimal>(type: "TEXT", nullable: false),
+                    PartsCost = table.Column<decimal>(type: "TEXT", nullable: false),
+                    LabourCost = table.Column<decimal>(type: "TEXT", nullable: false),
+                    TotalCost = table.Column<decimal>(type: "TEXT", nullable: false),
+                    VAT = table.Column<decimal>(type: "TEXT", nullable: false),
+                    TechnicianId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CompletedAppointment", x => x.Id);
+                    table.PrimaryKey("PK_Invoice", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CompletedAppointment_Appointment_AppointmentId",
+                        name: "FK_Invoice_Appointment_AppointmentId",
                         column: x => x.AppointmentId,
                         principalSchema: "Identity",
                         principalTable: "Appointment",
-                        principalColumn: "AppointmentID",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CompletedAppointment_User_TechnicianId",
+                        name: "FK_Invoice_User_TechnicianId",
                         column: x => x.TechnicianId,
                         principalSchema: "Identity",
                         principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -270,25 +315,51 @@ namespace WeFix.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Vehicle",
+                schema: "Identity",
+                columns: table => new
+                {
+                    VehicleReg = table.Column<string>(type: "TEXT", nullable: false),
+                    OwnerID = table.Column<string>(type: "TEXT", nullable: false),
+                    CarModel = table.Column<string>(type: "TEXT", nullable: false),
+                    Year = table.Column<string>(type: "TEXT", nullable: false),
+                    Doors = table.Column<int>(type: "INTEGER", nullable: false),
+                    TransmissionType = table.Column<string>(type: "TEXT", nullable: false),
+                    EngineSize = table.Column<double>(type: "REAL", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Vehicle", x => x.VehicleReg);
+                    table.ForeignKey(
+                        name: "FK_Vehicle_User_OwnerID",
+                        column: x => x.OwnerID,
+                        principalSchema: "Identity",
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AppointmentPartsUsed",
                 schema: "Identity",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    CompletedAppointmentId = table.Column<int>(type: "INTEGER", nullable: false),
+                    CompletedId = table.Column<int>(type: "INTEGER", nullable: false),
                     PartId = table.Column<int>(type: "INTEGER", nullable: false),
-                    PartName = table.Column<string>(type: "TEXT", nullable: false),
-                    QuantityUsed = table.Column<int>(type: "INTEGER", nullable: false)
+                    QuantityUsed = table.Column<int>(type: "INTEGER", nullable: false),
+                    TotalCost = table.Column<decimal>(type: "TEXT", nullable: false),
+                    InvoiceId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AppointmentPartsUsed", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AppointmentPartsUsed_CompletedAppointment_CompletedAppointmentId",
-                        column: x => x.CompletedAppointmentId,
+                        name: "FK_AppointmentPartsUsed_Invoice_InvoiceId",
+                        column: x => x.InvoiceId,
                         principalSchema: "Identity",
-                        principalTable: "CompletedAppointment",
+                        principalTable: "Invoice",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -301,10 +372,16 @@ namespace WeFix.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppointmentPartsUsed_CompletedAppointmentId",
+                name: "IX_Address_UserId",
+                schema: "Identity",
+                table: "Address",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppointmentPartsUsed_InvoiceId",
                 schema: "Identity",
                 table: "AppointmentPartsUsed",
-                column: "CompletedAppointmentId");
+                column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AppointmentPartsUsed_PartId",
@@ -313,15 +390,15 @@ namespace WeFix.Migrations
                 column: "PartId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CompletedAppointment_AppointmentId",
+                name: "IX_Invoice_AppointmentId",
                 schema: "Identity",
-                table: "CompletedAppointment",
+                table: "Invoice",
                 column: "AppointmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CompletedAppointment_TechnicianId",
+                name: "IX_Invoice_TechnicianId",
                 schema: "Identity",
-                table: "CompletedAppointment",
+                table: "Invoice",
                 column: "TechnicianId");
 
             migrationBuilder.CreateIndex(
@@ -367,17 +444,31 @@ namespace WeFix.Migrations
                 schema: "Identity",
                 table: "UserRoles",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vehicle_OwnerID",
+                schema: "Identity",
+                table: "Vehicle",
+                column: "OwnerID");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Address",
+                schema: "Identity");
+
+            migrationBuilder.DropTable(
+                name: "AppointmentPartsNeeded",
+                schema: "Identity");
+
+            migrationBuilder.DropTable(
                 name: "AppointmentPartsUsed",
                 schema: "Identity");
 
             migrationBuilder.DropTable(
-                name: "Customer",
+                name: "Inspection",
                 schema: "Identity");
 
             migrationBuilder.DropTable(
@@ -401,7 +492,11 @@ namespace WeFix.Migrations
                 schema: "Identity");
 
             migrationBuilder.DropTable(
-                name: "CompletedAppointment",
+                name: "Vehicle",
+                schema: "Identity");
+
+            migrationBuilder.DropTable(
+                name: "Invoice",
                 schema: "Identity");
 
             migrationBuilder.DropTable(

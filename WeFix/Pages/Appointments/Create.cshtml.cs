@@ -59,26 +59,34 @@ namespace WeFix.Pages.Appointments
                 Appointment.OwnerID = specifiedCustomer.Id;
                 Appointment.FirstName = specifiedCustomer.FirstName;
                 Appointment.Surname = specifiedCustomer.Surname;
+
+                Appointment.Status = AppointmentStatus.Submitted; // Set the status to Pending
+
+                _context.Appointment.Add(Appointment);
+                await _context.SaveChangesAsync();
+
+                return RedirectToPage("./Index");
             }
             else
             {
+                var isAuthorized = await _authorizationService.AuthorizeAsync(User, Appointment, AppointmentOperations.Create);
+                if (!isAuthorized.Succeeded)
+                {
+                    return Forbid();
+                }
+
                 Appointment.OwnerID = owner.Id;
                 Appointment.FirstName = owner.FirstName;
                 Appointment.Surname = owner.Surname;
+
+                Appointment.Status = AppointmentStatus.Submitted; // Set the status to Pending
+
+                _context.Appointment.Add(Appointment);
+                await _context.SaveChangesAsync();
+
+                return RedirectToPage("./Index");
             }
-
-            var isAuthorized = await _authorizationService.AuthorizeAsync(User, Appointment, AppointmentOperations.Create);
-            if (!isAuthorized.Succeeded)
-            {
-                return Forbid();
-            }
-
-            Appointment.Status = AppointmentStatus.Submitted; // Set the status to Pending
-
-            _context.Appointment.Add(Appointment);
-            await _context.SaveChangesAsync();
-
-            return RedirectToPage("./Index");
         }
+
     }
 }

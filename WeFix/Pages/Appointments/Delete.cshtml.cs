@@ -31,7 +31,7 @@ namespace WeFix.Pages.Appointments
         public async Task<IActionResult> OnGetAsync(int id)
         {
             Appointment? _appointment = await Context.Appointment.FirstOrDefaultAsync(
-                                                 m => m.AppointmentID == id);
+                                                 m => m.Id == id);
 
             if (_appointment == null)
             {
@@ -54,7 +54,7 @@ namespace WeFix.Pages.Appointments
         {
             var appointment = await Context
                 .Appointment.AsNoTracking()
-                .FirstOrDefaultAsync(m => m.AppointmentID == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (appointment == null)
             {

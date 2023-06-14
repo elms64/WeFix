@@ -29,9 +29,13 @@ namespace WeFix.Authorization
         public static readonly string ApproveOperationName = "Approve";
         public static readonly string RejectOperationName = "Reject";
 
-        public static readonly string AppointmentAdministratorsRole =
-                                                              "SysAdmin";
+        public static readonly string AppointmentAdministratorsRole = "SysAdmin";
+
         public static readonly string AppointmentManagersRole = "Manager";
+
+        public static readonly string ReceptionRole = "Reception";
+
+        public static readonly string TechnicianRole = "Technician";
     }
 }
 

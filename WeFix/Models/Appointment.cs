@@ -6,8 +6,7 @@ namespace WeFix.Models;
 public class Appointment
 {
     //Declaring attributes for Appointments
-    public int AppointmentID { get; set; }
-
+    public int Id { get; set; }
 
     // user ID from AspNetUser table.
     public string? OwnerID { get; set; }

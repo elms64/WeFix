@@ -18,17 +18,8 @@ public static class SeedData
         using (var context = new ApplicationDbContext(
             serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
         {
-            // For sample purposes seed both with the same password.
             // Password is set with the following:
             // dotnet user-secrets set SeedUserPW <pw>
-            // The admin user can do anything
-
-            // var adminID = await EnsureUser(serviceProvider, testUserPw, "admin@contoso.com");
-            //  await EnsureRole(serviceProvider, adminID, Constants.AppointmentAdministratorsRole);
-
-            // allowed user can create and edit contacts that they create
-            //  var managerID = await EnsureUser(serviceProvider, testUserPw, "manager@contoso.com");
-            //   await EnsureRole(serviceProvider, managerID, Constants.AppointmentManagersRole);
 
 
             if (context == null)

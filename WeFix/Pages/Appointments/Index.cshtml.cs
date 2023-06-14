@@ -31,6 +31,8 @@ namespace WeFix.Pages.Appointments
                                select c;
 
             var isAuthorized = User.IsInRole(Constants.AppointmentManagersRole) ||
+                                User.IsInRole(Constants.ReceptionRole) ||
+                                User.IsInRole(Constants.TechnicianRole) ||
                                User.IsInRole(Constants.AppointmentAdministratorsRole);
 
             var currentUserId = UserManager.GetUserId(User);

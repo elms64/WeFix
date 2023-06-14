@@ -1,0 +1,74 @@
+﻿@page
+@model WeFix.Areas.Identity.Pages.Account.Manage.ManageVehiclesModel
+@{
+    ViewData["Title"] = "Manage Vehicles";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Add New Vehicle</h4>
+        <hr />
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Vehicle.VehicleReg"></label>
+                <input asp-for="Vehicle.VehicleReg" class="form-control" />
+                <span asp-validation-for="Vehicle.VehicleReg" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Vehicle.CarModel"></label>
+                <input asp-for="Vehicle.CarModel" class="form-control" />
+                <span asp-validation-for="Vehicle.CarModel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Vehicle.Year"></label>
+                <input asp-for="Vehicle.Year" class="form-control" />
+                <span asp-validation-for="Vehicle.Year" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Vehicle.Doors"></label>
+                <input asp-for="Vehicle.Doors" class="form-control" />
+                <span asp-validation-for="Vehicle.Doors" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Vehicle.TransmissionType"></label>
+                <input asp-for="Vehicle.TransmissionType" class="form-control" />
+                <span asp-validation-for="Vehicle.TransmissionType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Vehicle.EngineSize"></label>
+                <input asp-for="Vehicle.EngineSize" class="form-control" />
+                <span asp-validation-for="Vehicle.EngineSize" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add Vehicle" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="col-md-6">
+        <h4>Your Vehicles</h4>
+        <hr />
+        @if (Model.UserVehicles == null || Model.UserVehicles.Count == 0)
+        {
+            <p>No vehicles found.</p>
+        }
+        else
+        {
+            <ul class="list-group">
+                @foreach (var vehicle in Model.UserVehicles)
+                {
+                    <li class="list-group-item">
+                        <strong>@vehicle.CarModel</strong><br />
+                        Registration: @vehicle.VehicleReg<br />
+                        Year: @vehicle.Year<br />
+                        Doors: @vehicle.Doors<br />
+                        Transmission: @vehicle.TransmissionType<br />
+                        Engine Size: @vehicle.EngineSize
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>

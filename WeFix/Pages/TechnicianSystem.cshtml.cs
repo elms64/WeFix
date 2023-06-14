@@ -36,7 +36,7 @@ namespace WeFix.Pages
             // Map appointment summaries for today's appointments
             var todayAppointmentSummaries = todayAppointments.Select(a => new AppointmentSummary
             {
-                AppointmentId = a.AppointmentID,
+                AppointmentId = a.Id,
                 CustomerName = $"{a.FirstName} {a.Surname}",
                 VehicleReg = a.VehicleReg,
                 Date = a.Date,
@@ -46,7 +46,7 @@ namespace WeFix.Pages
             // Map appointment summaries for future appointments
             var futureAppointmentSummaries = futureAppointments.Select(a => new AppointmentSummary
             {
-                AppointmentId = a.AppointmentID,
+                AppointmentId = a.Id,
                 CustomerName = $"{a.FirstName} {a.Surname}",
                 VehicleReg = a.VehicleReg,
                 Date = a.Date,

@@ -45,12 +45,24 @@ namespace WeFix.Data
             {
                 entity.ToTable("UserTokens");
             });
+            builder.Entity<Vehicle>(entity =>
+            {
+                entity.HasOne<ApplicationUser>()
+                    .WithMany()
+                    .HasForeignKey(vehicle => vehicle.OwnerID)
+                    .IsRequired();
+            });
+
         }
 
         public DbSet<Part> Part { get; set; }
         public DbSet<Appointment> Appointment { get; set; }
-        public DbSet<Customer> Customer { get; set; }
-        public DbSet<CompletedAppointment> CompletedAppointment { get; set; }
+        public DbSet<Address> Address { get; set; }
+        public DbSet<Invoice> Invoice { get; set; }
         public DbSet<AppointmentPartsUsed> AppointmentPartsUsed { get; set; }
+        public DbSet<AppointmentPartsNeeded> AppointmentPartsNeeded { get; set; }
+        public DbSet<Inspection> Inspection { get; set; }
+        public DbSet<Vehicle> Vehicle { get; set; }
+
     }
 }

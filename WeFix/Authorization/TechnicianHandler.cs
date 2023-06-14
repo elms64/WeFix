@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace WeFix.Authorization
 {
-    public class ContactManagerAuthorizationHandler :
+    public class TechnicianHandler :
         AuthorizationHandler<OperationAuthorizationRequirement, Appointment>
     {
         protected override Task
@@ -27,8 +27,8 @@ namespace WeFix.Authorization
                 return Task.CompletedTask;
             }
 
-            // Managers can approve or reject.
-            if (context.User.IsInRole(Constants.AppointmentManagersRole))
+            // Technicians can approve or reject.
+            if (context.User.IsInRole(Constants.ReceptionRole))
             {
                 context.Succeed(requirement);
             }

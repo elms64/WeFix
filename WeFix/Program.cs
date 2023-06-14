@@ -9,6 +9,7 @@ using WeFix.Models;
 using WeFix.Areas.Identity.Data;
 using Microsoft.VisualStudio.Web.CodeGeneration.Utils;
 using WeFix.Authorization;
+using System.Globalization;
 
 internal class Program
 {
@@ -83,7 +84,8 @@ internal class Program
             options.SlidingExpiration = true;
         });
 
-
+        CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-GB");
+        CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-GB");
 
         var app = builder.Build();
 
