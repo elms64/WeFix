@@ -14,17 +14,17 @@ using WeFix.Models;
 namespace WeFix.Areas.Identity.Pages.Account.Manage
 {
     [Authorize]
-    public class ManageVehiclesModel : PageModel
+    public class ManageAddressesModel : PageModel
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public List<Vehicle> UserVehicles { get; set; }
+        public List<Address> UserAddresses { get; set; }
 
         [BindProperty]
-        public VehicleInputModel VehicleInput { get; set; }
+        public AddressInputModel AddressInput { get; set; }
 
-        public ManageVehiclesModel(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ManageAddressesModel(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -57,26 +57,26 @@ namespace WeFix.Areas.Identity.Pages.Account.Manage
                 return NotFound("User not found.");
             }
 
-            var existingVehicle = await _context.Vehicle.FirstOrDefaultAsync(v => v.VehicleReg == VehicleInput.VehicleReg);
-            if (existingVehicle != null)
+            var existingAddress = await _context.Address.FirstOrDefaultAsync(a => a.AddressLine1 == AddressInput.AddressLine1 && a.AddressLine2 == AddressInput.AddressLine2 && a.City == AddressInput.City && a.State == AddressInput.State && a.PostCode == AddressInput.PostCode && a.Country == AddressInput.Country);
+            if (existingAddress != null)
             {
-                ModelState.AddModelError(string.Empty, "A vehicle with the same registration number already exists. Please enter a unique vehicle registration number or contact customer support.");
+                ModelState.AddModelError(string.Empty, "An address with the same details already exists. Please enter a unique address or contact customer support.");
                 await LoadAsync(currentUser);
                 return Page();
             }
 
-            var vehicle = new Vehicle
+            var address = new Address
             {
-                VehicleReg = VehicleInput.VehicleReg,
-                CarModel = VehicleInput.CarModel,
-                Year = VehicleInput.Year,
-                Doors = VehicleInput.Doors,
-                TransmissionType = VehicleInput.TransmissionType,
-                EngineSize = VehicleInput.EngineSize,
-                OwnerID = currentUser.Id
+                UserId = currentUser.Id,
+                AddressLine1 = AddressInput.AddressLine1,
+                AddressLine2 = AddressInput.AddressLine2,
+                City = AddressInput.City,
+                State = AddressInput.State,
+                PostCode = AddressInput.PostCode,
+                Country = AddressInput.Country
             };
 
-            _context.Vehicle.Add(vehicle);
+            _context.Address.Add(address);
             await _context.SaveChangesAsync();
 
             return RedirectToPage();
@@ -84,32 +84,29 @@ namespace WeFix.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(ApplicationUser user)
         {
-            UserVehicles = await _context.Vehicle.Where(v => v.OwnerID == user.Id).ToListAsync();
+            UserAddresses = await _context.Address.Where(a => a.UserId == user.Id).ToListAsync();
         }
     }
 
-    public class VehicleInputModel
+    public class AddressInputModel
     {
         [Required]
-        [Display(Name = "Vehicle Registration")]
-        public string VehicleReg { get; set; }
+        [Display(Name = "Address Line 1")]
+        public string AddressLine1 { get; set; }
 
         [Required]
-        [Display(Name = "Suzuki Model")]
-        public string CarModel { get; set; }
+        [Display(Name = "Address Line 2")]
+        public string AddressLine2 { get; set; }
 
         [Required]
-        public string Year { get; set; }
+        public string City { get; set; }
+
+        public string State { get; set; }
 
         [Required]
-        public int Doors { get; set; }
+        public string PostCode { get; set; }
 
         [Required]
-        [Display(Name = "Transmission Type")]
-        public string TransmissionType { get; set; }
-
-        [Required]
-        [Display(Name = "Engine Size")]
-        public double EngineSize { get; set; }
+        public string Country { get; set; }
     }
 }

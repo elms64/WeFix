@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using WeFix.Areas.Identity.Data;
 using WeFix.Authorization;
 using WeFix.Data;
@@ -54,6 +55,16 @@ namespace WeFix.Pages.Appointments
             Appointment.Email = owner.Email;
             Appointment.Status = AppointmentStatus.Submitted;
 
+            // Validate VehicleReg and OwnerID
+            var vehicle = await _context.Vehicle.FirstOrDefaultAsync(v =>
+                v.VehicleReg == Appointment.VehicleReg && v.OwnerID == owner.Id);
+
+            if (vehicle == null)
+            {
+                ModelState.AddModelError("Appointment.VehicleReg", "Invalid Vehicle Registration number. Ensure this vehicle is registered to you in account settings. Or contact customer support.");
+                return Page();
+            }
+
             var isAuthorized = await _authorizationService.AuthorizeAsync(
                                     User, Appointment, AppointmentOperations.Create);
             if (!isAuthorized.Succeeded)
@@ -66,5 +77,6 @@ namespace WeFix.Pages.Appointments
 
             return RedirectToPage("./Index");
         }
+
     }
 }

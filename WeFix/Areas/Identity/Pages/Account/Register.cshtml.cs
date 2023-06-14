@@ -86,29 +86,29 @@ namespace WeFix.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
-            [DataType(DataType.Text)]
-            [Display(Name = "Phone")]
-            public string Phone { get; set; }
+            /*   [DataType(DataType.Text)]
+               [Display(Name = "Phone")]
+               public string Phone { get; set; }
 
-            [DataType(DataType.Text)]
-            [Display(Name = "Address Line 1")]
-            public string AddressLine1 { get; set; }
+               [DataType(DataType.Text)]
+               [Display(Name = "Address Line 1")]
+               public string AddressLine1 { get; set; }
 
-            [DataType(DataType.Text)]
-            [Display(Name = "Address Line 2")]
-            public string AddressLine2 { get; set; }
+               [DataType(DataType.Text)]
+               [Display(Name = "Address Line 2")]
+               public string AddressLine2 { get; set; }
 
-            [DataType(DataType.Text)]
-            [Display(Name = "City")]
-            public string City { get; set; }
+               [DataType(DataType.Text)]
+               [Display(Name = "City")]
+               public string City { get; set; }
 
-            [DataType(DataType.Text)]
-            [Display(Name = "City")]
-            public string State { get; set; }
+               [DataType(DataType.Text)]
+               [Display(Name = "City")]
+               public string State { get; set; }
 
-            [DataType(DataType.Text)]
-            [Display(Name = "Postcode")]
-            public string Postcode { get; set; }
+               [DataType(DataType.Text)]
+               [Display(Name = "Postcode")]
+               public string Postcode { get; set; } */
 
 
         }
