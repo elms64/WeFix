@@ -22,11 +22,16 @@ namespace WeFix.Pages
         }
 
         public IList<AppointmentSummary> AppointmentSummaries { get; set; }
+        public IList<Part> Parts { get; set; } // Add property for parts
+
         public int? SelectedAppointmentIndex { get; set; }
 
         public async Task OnGetAsync(int? selectedAppointment)
         {
-            var appointments = await _context.Appointment.Where(a => a.Status == AppointmentStatus.Approved).ToListAsync();
+            var appointments = await _context.Appointment
+                .Where(a => a.Status == AppointmentStatus.Approved)
+                .ToListAsync();
+
             var currentDate = DateTime.Today;
 
             // Filter appointments for today and future
@@ -40,7 +45,8 @@ namespace WeFix.Pages
                 CustomerName = $"{a.FirstName} {a.Surname}",
                 VehicleReg = a.VehicleReg,
                 Date = a.Date,
-                Description = a.Description
+                Description = a.Description,
+                Status = a.Status // Include appointment status in summary
             }).ToList();
 
             // Map appointment summaries for future appointments
@@ -50,22 +56,18 @@ namespace WeFix.Pages
                 CustomerName = $"{a.FirstName} {a.Surname}",
                 VehicleReg = a.VehicleReg,
                 Date = a.Date,
-                Description = a.Description
+                Description = a.Description,
+                Status = a.Status // Include appointment status in summary
             }).ToList();
 
             AppointmentSummaries = todayAppointmentSummaries.Concat(futureAppointmentSummaries).ToList();
 
-            if (selectedAppointment.HasValue)
-            {
-                SelectedAppointmentIndex = FindSelectedAppointmentIndex(selectedAppointment.Value);
-            }
-            else
-            {
-                SelectedAppointmentIndex = null;
-            }
+            SelectedAppointmentIndex = selectedAppointment.HasValue
+                ? FindSelectedAppointmentIndex(selectedAppointment.Value)
+                : null;
+
+            Parts = await _context.Part.ToListAsync(); // Fetch parts data from the database
         }
-
-
 
         private int? FindSelectedAppointmentIndex(int selectedAppointmentId)
         {
@@ -79,11 +81,9 @@ namespace WeFix.Pages
             return null;
         }
 
-
-
-        public IActionResult OnPostCompleteJob(int appointmentId)
+        public IActionResult OnPostCompleteInspection(int appointmentId)
         {
-            return RedirectToPage("CompleteJob", new { appointmentId });
+            return RedirectToPage("/Inspections/Create", new { appointmentId });
         }
 
         public class AppointmentSummary
@@ -93,6 +93,7 @@ namespace WeFix.Pages
             public string VehicleReg { get; set; }
             public DateTime Date { get; set; }
             public string Description { get; set; }
+            public AppointmentStatus Status { get; set; } // Include appointment status property
         }
     }
 }

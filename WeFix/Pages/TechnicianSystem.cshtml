@@ -6,82 +6,133 @@
 
 <h1>Technician System</h1>
 <hr />
-<div class="row">
-    <div class="col-md-7">
-        <h3>Today's Appointments</h3>
+<div class="container">
+    <div class="row">
+        <div class="col-md-7">
+            <h3>Today's Appointments</h3>
 
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Customer Name</th>
-                    <th>Vehicle Reg</th>
-                    <th>Date</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var appointment in Model.AppointmentSummaries.Where(a => a.Date.Date == DateTime.Today))
-                {
-                    <tr class="appointment-row" data-appointment-id="@appointment.AppointmentId">
-                        <td>@appointment.CustomerName</td>
-                        <td>@appointment.VehicleReg</td>
-                        <td>@appointment.Date</td>
-                        <td>@appointment.Description</td>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Customer Name</th>
+                        <th>Vehicle Reg</th>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Status</th> <!-- Added column for appointment status -->
                     </tr>
-                }
-            </tbody>
-        </table>
-        <br />
-        <h3>Upcoming Appointments</h3>
+                </thead>
+                <tbody>
+                    @foreach (var appointment in Model.AppointmentSummaries.Where(a => a.Date.Date == DateTime.Today))
+                    {
+                        <tr class="appointment-row" data-appointment-id="@appointment.AppointmentId">
+                            <td>@appointment.CustomerName</td>
+                            <td>@appointment.VehicleReg</td>
+                            <td>@appointment.Date</td>
+                            <td>@appointment.Description</td>
+                            <td>@appointment.Status</td> <!-- Display appointment status -->
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <br />
+            <h3>Upcoming Appointments</h3>
 
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Customer Name</th>
-                    <th>Vehicle Reg</th>
-                    <th>Date</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var appointment in Model.AppointmentSummaries.Where(a => a.Date.Date > DateTime.Today))
-                {
-                    <tr class="appointment-row" data-appointment-id="@appointment.AppointmentId">
-                        <td>@appointment.CustomerName</td>
-                        <td>@appointment.VehicleReg</td>
-                        <td>@appointment.Date</td>
-                        <td>@appointment.Description</td>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Customer Name</th>
+                        <th>Vehicle Reg</th>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Status</th> <!-- Added column for appointment status -->
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <div class="col-md-4">
-        @if (Model.SelectedAppointmentIndex.HasValue)
-        {
-            var selectedAppointment = Model.AppointmentSummaries[Model.SelectedAppointmentIndex.Value];
-            <div class="card">
-                <div class="card-header">
-                    Appointment Details
-                    <span class="close-button float-right" onclick="closeCard()">&nbsp&nbspX&nbsp&nbsp</span>
+                </thead>
+                <tbody>
+                    @foreach (var appointment in Model.AppointmentSummaries.Where(a => a.Date.Date > DateTime.Today))
+                    {
+                        <tr class="appointment-row" data-appointment-id="@appointment.AppointmentId">
+                            <td>@appointment.CustomerName</td>
+                            <td>@appointment.VehicleReg</td>
+                            <td>@appointment.Date</td>
+                            <td>@appointment.Description</td>
+                            <td>@appointment.Status</td> <!-- Display appointment status -->
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <h1>Parts</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Part Name</th>
+                        <th>Release Date</th>
+                        <th>Car Model</th>
+                        <th>Price</th>
+                        <th>Stock Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var part in Model.Parts)
+                    {
+                        <tr>
+                            <td>@part.ID</td>
+                            <td>@part.PartName</td>
+                            <td>@part.ReleaseDate</td>
+                            <td>@part.CarModel</td>
+                            <td>@part.Price</td>
+                            <td>@part.StockQuantity</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-4">
+            @if (Model.SelectedAppointmentIndex.HasValue)
+            {
+                var selectedAppointment = Model.AppointmentSummaries[Model.SelectedAppointmentIndex.Value];
+                <div class="card">
+                    <div class="card-header">
+                        Appointment Details
+                        <span class="close-button float-right" onclick="closeCard()">&nbsp;&nbsp;X&nbsp;&nbsp;</span>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Appointment ID: @selectedAppointment.AppointmentId</h5>
+                        <p class="card-text">Customer Name: @selectedAppointment.CustomerName</p>
+                        <p class="card-text">Vehicle Reg: @selectedAppointment.VehicleReg</p>
+                        <p class="card-text">Date: @selectedAppointment.Date</p>
+                        <p class="card-text">Description: @selectedAppointment.Description</p>
+                        <button class="btn btn-secondary" style="float:left" onclick="showForm()">Complete Inspection</button>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <h5 class="card-title">Appointment ID: @selectedAppointment.AppointmentId</h5>
-                    <p class="card-text">Customer Name: @selectedAppointment.CustomerName</p>
-                    <p class="card-text">Vehicle Reg: @selectedAppointment.VehicleReg</p>
-                    <p class="card-text">Date: @selectedAppointment.Date</p>
-                    <p class="card-text">Description: @selectedAppointment.Description</p>
+
+                <div id="inspectionFormContainer" style="display:none;">
+                    <h3>Complete Inspection</h3>
                     <form method="post" asp-page-handler="CompleteInspection">
                         <input type="hidden" name="appointmentId" value="@selectedAppointment.AppointmentId" />
-                        <button type="submit" class="btn btn-secondary" style="float:left">Complete Inspection</button>
-                    </form>
-                    <form method="post" asp-page-handler="CompleteJob">
-                        <input type="hidden" name="appointmentId" value="@selectedAppointment.AppointmentId" />
-                        <button type="submit" class="btn btn-secondary" style="float:right">Complete Job</button>
+
+                        <div class="form-group">
+                            <label for="notes">Notes:</label>
+                            <input type="text" class="form-control" id="notes" name="notes" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="partsNeeded">Required Parts:</label>
+                            <input type="text" class="form-control" id="partsNeeded" name="partsNeeded" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" id="email" name="email" />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Save Inspection</button>
                     </form>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
 </div>
 
@@ -93,5 +144,9 @@
         $('.appointment-row').click(function () {
             var appointmentId = $(this).data('appointment-id');
             window.location.href = '?selectedAppointment=' + appointmentId;
-        });</script>
+        });
+
+        function showForm() {
+            $('#inspectionFormContainer').show();
+        }</script>
 }

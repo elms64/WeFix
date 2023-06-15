@@ -9,7 +9,7 @@
 
 
 <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-    <h3>New Customer Form</h3><p>Existing customers please login or contact us if experiencing difficulty</p>
+    <h3>Registration</h3><p>Enter your details to sign up for a free account</p>
     <hr />
     <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
     <div class="row">
@@ -75,7 +75,7 @@
             <label asp-for="Input.Postcode"> Postcode</label>
             <span asp-validation-for="Input.Postcode" class="text-danger"></span>
         </div> -->
-    <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+    <br /><button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-secondary">Register</button>
 </form>
 
 
